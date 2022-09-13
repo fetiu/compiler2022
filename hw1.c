@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define MAX_BUF_SIZE 256
@@ -22,9 +23,11 @@ static char *split(const char *src, char delim, char **rest, char *buf)
     if (rest) {
         *rest = NULL;
     }
+    int parens = 0;
     while (1) {
         char c = *src;
-        if (c == delim) {
+        // split except for parenthesis
+        if (c == delim && parens == 0) {
             *dst = '\0';
             break;
         }
@@ -34,6 +37,10 @@ static char *split(const char *src, char delim, char **rest, char *buf)
                 return buf;
             }
             return NULL;
+        } else if (c == '(') {
+            parens++;
+        } else if (c == ')') {
+            parens--;
         }
         // ignore spaces
         if (c != ' ') {
@@ -59,7 +66,7 @@ static int calc_factor(const char *factor)
 
     if (*factor == '(') {
         char buf[MAX_BUF_SIZE];
-        // extract expression inside parenthesis
+        // extract expression inside parentheses
         char *expr = split(factor + 1, ')', NULL, buf);
         if (is_lambda(expr)) {
             errmsg = "empty expression";
@@ -76,7 +83,7 @@ static int calc_factor(const char *factor)
     return num;
 error:
     printf("[%s] %s: %s\n", __func__, errmsg, factor);
-    return 0xDEADBEEF;
+    exit(-3);
 }
 
 static int calc_term(const char *term)
@@ -86,6 +93,7 @@ static int calc_term(const char *term)
     char *factor = split(term, '*', &term_rest, buf);
     if (is_lambda(factor)) {
         printf("[%s] empty factor in %s\n", __func__, term);
+        exit(-2);
     }
     
     if (is_lambda(term_rest)) {
@@ -101,6 +109,7 @@ static int calc_expr(const char *expr)
     char *term = split(expr, '+', &expr_rest, buf);
     if (is_lambda(term)) {
         printf("[%s] empty term in %s\n", __func__, expr);
+        exit(-1);
     }
 
     if (is_lambda(expr_rest)) {
@@ -113,7 +122,7 @@ int main(void)
 {
     printf("math expr: ");
     char buf[MAX_BUF_SIZE];
-    char *expr = gets(buf);
+    char *expr = gets(buf); // same with getchar until line feed
     if (!expr) {
         return -1;
     }
