@@ -12,9 +12,11 @@ enum error {
 };
 
 static int num;
+static double fnum;
 static enum {
     NUL,
     NUMBER,
+    FLOAT,
     PLUS,
     STAR,
     LPAREN,
@@ -22,9 +24,9 @@ static enum {
     END
 } token;
 
-static int expression(void);
-static int term(void);
-static int factor(void);
+static double expression(void);
+static double term(void);
+static double factor(void);
 
 static void error(enum error e)
 {
@@ -52,13 +54,29 @@ static void get_token()
         ch = getchar();
     }
     if (isdigit(ch)) {
+        int exponent = 1;
         num = 0;
+        token = NUMBER;
         do {
+            if (token == FLOAT) {
+                exponent *= 10;
+            }
             num = num * 10 + todigit(ch);
             putchar(ch);
             ch = getchar();
+            if (ch == '.') {
+                // only 1 dot allowed
+                if (token == FLOAT) {
+                    error(BADTOKEN);
+                }
+                token = FLOAT;
+                putchar(ch);
+                ch = getchar();
+            }
         } while (isdigit(ch));
-        token = NUMBER;
+        if (token == FLOAT) {
+            fnum = (double)num / exponent;
+        }
         return;
     } else if (ch == '+') {
         putchar(ch);
@@ -87,18 +105,18 @@ static void get_token()
 int main(void)
 {
     get_token();
-    int result = expression();
+    double result = expression();
     if (token != END) {
         error(BADTOKEN);
     } else {
-        printf("=%d\n", result);
+        printf("=%f\n", result);
     }
     return 0;
 }
 
-static int expression(void)
+static double expression(void)
 {
-    int result = term();
+    double result = term();
     while (token == PLUS) {
         get_token();
         result = result + term();
@@ -106,9 +124,9 @@ static int expression(void)
     return result;
 }
 
-static int term(void)
+static double term(void)
 {
-    int result = factor();
+    double result = factor();
     while (token == STAR) {
         get_token();
         result = result * factor();
@@ -116,11 +134,14 @@ static int term(void)
     return result;
 }
 
-static int factor(void)
+static double factor(void)
 {
-    int result;
+    double result;
     if (token == NUMBER) {
         result = num;
+        get_token();
+    } else if (token == FLOAT) {
+        result = fnum;
         get_token();
     } else if (token == LPAREN) {
         get_token();
@@ -134,6 +155,5 @@ static int factor(void)
         error(NOFACTOR);
     }
     return result;
-
 }
 
