@@ -11,20 +11,22 @@ enum error {
     BADTOKEN,
 };
 
+static int num;
+static double fnum;
 static enum {
     NUL,
     NUMBER,
+    FLOAT,
     PLUS,
     STAR,
     LPAREN,
     RPAREN,
     END
 } token;
-static double num;
 
-static double expression(void);
-static double term(void);
-static double factor(void);
+static int expression(void);
+static int term(void);
+static int factor(void);
 
 static void error(enum error e)
 {
@@ -98,18 +100,18 @@ static void get_token()
 int main(void)
 {
     get_token();
-    double result = expression();
+    int result = expression();
     if (token != END) {
         error(BADTOKEN);
     } else {
-        printf("=%f\n", result);
+        printf("=%d\n", result);
     }
     return 0;
 }
 
-static double expression(void)
+static int expression(void)
 {
-    double result = term();
+    int result = term();
     while (token == PLUS) {
         get_token();
         result = result + term();
@@ -117,9 +119,9 @@ static double expression(void)
     return result;
 }
 
-static double term(void)
+static int term(void)
 {
-    double result = factor();
+    int result = factor();
     while (token == STAR) {
         get_token();
         result = result * factor();
@@ -127,9 +129,9 @@ static double term(void)
     return result;
 }
 
-static double factor(void)
+static int factor(void)
 {
-    double result;
+    int result;
     if (token == NUMBER) {
         result = num;
         get_token();
