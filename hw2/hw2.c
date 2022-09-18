@@ -6,7 +6,7 @@
 enum error {
     NOFACTOR,
     NORPAREN,
-    INVALID,
+    BADTOKEN,
 };
 
 static int num;
@@ -33,8 +33,8 @@ static void error(enum error e)
     case NORPAREN:
         printf("\nno closing parenthesis found\n");
         break;
-    case INVALID:
-        printf("\ninvalid expression\n");
+    case BADTOKEN:
+        printf("\ninvalid tokens in expression\n");
         break;
     default:
         break;
@@ -46,57 +46,57 @@ static void get_token()
 {
     static char ch = ' ';
     // skip whitespaces
-    while (ch == ' ' || ch == '\t' ) {
-        // puts(__func__);
+    while (ch == ' ' || ch == '\t') {
         ch = getchar();
     }
     if (isdigit(ch)) {
         char numstr[11] = {ch}; // affords INTMAX = 2,147,483,647
         do {
+            putchar(ch);
             ch = getchar();
             strncat(numstr, &ch, 1);
         } while (isdigit(ch) && strlen(numstr) < (sizeof(numstr)-1));
-        puts(numstr);
         num = atoi(numstr);
         token = NUMBER;
         return;
     } else if (ch == '+') {
+        putchar(ch);
         ch = getchar();
         token = PLUS;
     } else if (ch == '*') {
+        putchar(ch);
         ch = getchar();
         token = STAR;
     } else if (ch == '(') {
+        putchar(ch);
         ch = getchar();
         token = LPAREN;
     } else if (ch == ')') {
+        putchar(ch);
         ch = getchar();
         token = RPAREN;
     } else if (ch == EOF || ch == '\n') {
         token = END;
         return;
     } else {
-        error(INVALID);
+        error(BADTOKEN);
     }
-    putchar(ch);
 }
 
 int main(void)
 {
     get_token();
-    // puts(__func__);
     int result = expression();
     if (token != END) {
-        error(INVALID);
+        error(BADTOKEN);
     } else {
-        printf(" = %d\n", result);
+        printf("=%d\n", result);
     }
     return 0;
 }
 
 static int expression(void)
 {
-    // puts(__func__);
     int result = term();
     while (token == PLUS) {
         get_token();
@@ -107,7 +107,6 @@ static int expression(void)
 
 static int term(void)
 {
-    // puts(__func__);
     int result = factor();
     while (token == STAR) {
         get_token();
@@ -118,7 +117,6 @@ static int term(void)
 
 static int factor(void)
 {
-    // puts(__func__);
     int result;
     if (token == NUMBER) {
         result = num;
