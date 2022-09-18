@@ -11,18 +11,16 @@ enum error {
     BADTOKEN,
 };
 
-static int num;
-static double fnum;
 static enum {
     NUL,
     NUMBER,
-    FLOAT,
     PLUS,
     STAR,
     LPAREN,
     RPAREN,
     END
 } token;
+static double num;
 
 static double expression(void);
 static double term(void);
@@ -54,29 +52,24 @@ static void get_token()
         ch = getchar();
     }
     if (isdigit(ch)) {
-        int exponent = 1;
         num = 0;
-        token = NUMBER;
         do {
-            if (token == FLOAT) {
-                exponent *= 10;
-            }
             num = num * 10 + todigit(ch);
             putchar(ch);
             ch = getchar();
-            if (ch == '.') {
-                // only 1 dot allowed
-                if (token == FLOAT) {
-                    error(BADTOKEN);
-                }
-                token = FLOAT;
+        } while (isdigit(ch));
+        if (ch == '.') {
+            int exp = 1;
+            putchar(ch);
+            ch = getchar();
+            do {
+                exp *= 10;
+                num += (double)todigit(ch) / exp;
                 putchar(ch);
                 ch = getchar();
-            }
-        } while (isdigit(ch));
-        if (token == FLOAT) {
-            fnum = (double)num / exponent;
+            } while (isdigit(ch));
         }
+        token = NUMBER;
         return;
     } else if (ch == '+') {
         putchar(ch);
@@ -139,9 +132,6 @@ static double factor(void)
     double result;
     if (token == NUMBER) {
         result = num;
-        get_token();
-    } else if (token == FLOAT) {
-        result = fnum;
         get_token();
     } else if (token == LPAREN) {
         get_token();
