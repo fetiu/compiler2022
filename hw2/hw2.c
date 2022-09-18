@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <string.h>
+
+#define str(s) #s
+#define todigit(c) (c - '0') // ascii diff
 
 enum error {
     NOFACTOR,
@@ -50,13 +52,12 @@ static void get_token()
         ch = getchar();
     }
     if (isdigit(ch)) {
-        char numstr[11] = {ch}; // affords INTMAX = 2,147,483,647
+        num = 0;
         do {
+            num = num * 10 + todigit(ch);
             putchar(ch);
             ch = getchar();
-            strncat(numstr, &ch, 1);
-        } while (isdigit(ch) && strlen(numstr) < (sizeof(numstr)-1));
-        num = atoi(numstr);
+        } while (isdigit(ch));
         token = NUMBER;
         return;
     } else if (ch == '+') {
