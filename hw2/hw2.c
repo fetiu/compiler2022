@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#define str(s) #s
 #define todigit(c) (c - '0') // ascii diff
 
 enum error {
