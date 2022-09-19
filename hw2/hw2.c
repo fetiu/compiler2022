@@ -54,7 +54,7 @@ static void error(enum error e)
     exit(1);
 }
 
-static void get_token()
+static void get_token(void)
 {
     static char ch = ' ';
     // skip whitespaces
