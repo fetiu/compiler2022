@@ -11,12 +11,21 @@ enum error {
     BADTOKEN,
 };
 
-static int num;
-static double fnum;
+typedef struct {
+    enum {
+        INT,
+        FLOAT
+    } type;
+    union {
+        int i;
+        float f;
+    } val;
+} number;
+
+static number num;
 static enum {
     NUL,
     NUMBER,
-    FLOAT,
     PLUS,
     STAR,
     LPAREN,
@@ -24,9 +33,9 @@ static enum {
     END
 } token;
 
-static int expression(void);
-static int term(void);
-static int factor(void);
+static number expression(void);
+static number term(void);
+static number factor(void);
 
 static void error(enum error e)
 {
@@ -54,19 +63,22 @@ static void get_token()
         ch = getchar();
     }
     if (isdigit(ch)) {
-        num = 0;
+        num.type = INT;
+        num.val.i = 0;
         do {
-            num = num * 10 + todigit(ch);
+            num.val.i = num.val.i * 10 + todigit(ch);
             putchar(ch);
             ch = getchar();
         } while (isdigit(ch));
         if (ch == '.') {
+            num.type = FLOAT;
+            num.val.f = num.val.i;
             int exp = 1;
             putchar(ch);
             ch = getchar();
             do {
                 exp *= 10;
-                num += (double)todigit(ch) / exp;
+                num.val.f += (float)todigit(ch) / exp;
                 putchar(ch);
                 ch = getchar();
             } while (isdigit(ch));
@@ -100,38 +112,60 @@ static void get_token()
 int main(void)
 {
     get_token();
-    int result = expression();
+    number result = expression();
     if (token != END) {
         error(BADTOKEN);
+    } else if (result.type == FLOAT) {
+        printf("=%f\n", result.val.f);
     } else {
-        printf("=%d\n", result);
+        printf("=%d\n", result.val.i);
     }
     return 0;
 }
 
-static int expression(void)
+static number expression(void)
 {
-    int result = term();
+    number result = term();
     while (token == PLUS) {
         get_token();
-        result = result + term();
+        number rest = term();
+        if (result.type == INT && rest.type == FLOAT) {
+            result.type = FLOAT;
+            result.val.f = result.val.i + rest.val.f;
+        } else if (result.type == FLOAT && rest.type == INT){
+            result.val.f += rest.val.i;
+        } else if (result.type == FLOAT && rest.type == FLOAT) {
+            result.val.f += rest.val.f;
+        } else {
+            result.val.i += rest.val.i;
+        }
     }
     return result;
 }
 
-static int term(void)
+static number term(void)
 {
-    int result = factor();
+    number result = factor();
     while (token == STAR) {
         get_token();
-        result = result * factor();
+        number rest = factor();
+        if (result.type == INT && rest.type == FLOAT) {
+            result.type = FLOAT;
+            result.val.f = result.val.i * rest.val.f;
+        } else if (result.type == FLOAT && rest.type == INT){
+            result.val.f *= rest.val.i;
+        } else if (result.type == FLOAT && rest.type == FLOAT) {
+            result.val.f *= rest.val.f;
+        } else {
+            result.val.i *= rest.val.i;
+        }
     }
     return result;
 }
 
-static int factor(void)
+static number factor(void)
 {
-    int result;
+    number result;
     if (token == NUMBER) {
         result = num;
         get_token();
