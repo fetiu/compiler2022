@@ -73,12 +73,12 @@ static void get_token()
         if (ch == '.') {
             num.type = FLOAT;
             num.val.f = num.val.i;
-            int exp = 1;
+            double exp = 1;
             putchar(ch);
             ch = getchar();
             do {
                 exp *= 10;
-                num.val.f += (float)todigit(ch) / exp;
+                num.val.f += todigit(ch) / exp;
                 putchar(ch);
                 ch = getchar();
             } while (isdigit(ch));
