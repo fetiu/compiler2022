@@ -76,12 +76,12 @@ static void get_token()
             double exp = 1;
             putchar(ch);
             ch = getchar();
-            do {
+            while (isdigit(ch)) {
                 exp *= 10;
                 num.val.f += todigit(ch) / exp;
                 putchar(ch);
                 ch = getchar();
-            } while (isdigit(ch));
+            }
         }
         token = NUMBER;
         return;
