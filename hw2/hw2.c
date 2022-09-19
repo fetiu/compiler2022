@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#define str(s) #s
 #define todigit(c) (c - '0') // ascii diff
 
 enum error {
@@ -11,6 +10,18 @@ enum error {
     BADTOKEN,
 };
 
+typedef struct {
+    enum {
+        INT,
+        FLOAT
+    } type;
+    union {
+        int i;
+        double f;
+    } val;
+} number;
+
+static number num;
 static enum {
     NUL,
     NUMBER,
@@ -20,11 +31,10 @@ static enum {
     RPAREN,
     END
 } token;
-static double num;
 
-static double expression(void);
-static double term(void);
-static double factor(void);
+static number expression(void);
+static number term(void);
+static number factor(void);
 
 static void error(enum error e)
 {
@@ -52,22 +62,25 @@ static void get_token()
         ch = getchar();
     }
     if (isdigit(ch)) {
-        num = 0;
+        num.type = INT;
+        num.val.i = 0;
         do {
-            num = num * 10 + todigit(ch);
+            num.val.i = num.val.i * 10 + todigit(ch);
             putchar(ch);
             ch = getchar();
         } while (isdigit(ch));
         if (ch == '.') {
-            int exp = 1;
+            num.type = FLOAT;
+            num.val.f = num.val.i;
+            double exp = 1;
             putchar(ch);
             ch = getchar();
-            do {
+            while (isdigit(ch)) {
                 exp *= 10;
-                num += (double)todigit(ch) / exp;
+                num.val.f += todigit(ch) / exp;
                 putchar(ch);
                 ch = getchar();
-            } while (isdigit(ch));
+            }
         }
         token = NUMBER;
         return;
@@ -98,38 +111,60 @@ static void get_token()
 int main(void)
 {
     get_token();
-    double result = expression();
+    number result = expression();
     if (token != END) {
         error(BADTOKEN);
+    } else if (result.type == FLOAT) {
+        printf("=%f\n", result.val.f);
     } else {
-        printf("=%f\n", result);
+        printf("=%i\n", result.val.i);
     }
     return 0;
 }
 
-static double expression(void)
+static number expression(void)
 {
-    double result = term();
+    number result = term();
     while (token == PLUS) {
         get_token();
-        result = result + term();
+        number rest = term();
+        if (result.type == INT && rest.type == FLOAT) {
+            result.type = FLOAT;
+            result.val.f = result.val.i + rest.val.f;
+        } else if (result.type == FLOAT && rest.type == INT){
+            result.val.f += rest.val.i;
+        } else if (result.type == FLOAT && rest.type == FLOAT) {
+            result.val.f += rest.val.f;
+        } else {
+            result.val.i += rest.val.i;
+        }
     }
     return result;
 }
 
-static double term(void)
+static number term(void)
 {
-    double result = factor();
+    number result = factor();
     while (token == STAR) {
         get_token();
-        result = result * factor();
+        number rest = factor();
+        if (result.type == INT && rest.type == FLOAT) {
+            result.type = FLOAT;
+            result.val.f = result.val.i * rest.val.f;
+        } else if (result.type == FLOAT && rest.type == INT){
+            result.val.f *= rest.val.i;
+        } else if (result.type == FLOAT && rest.type == FLOAT) {
+            result.val.f *= rest.val.f;
+        } else {
+            result.val.i *= rest.val.i;
+        }
     }
     return result;
 }
 
-static double factor(void)
+static number factor(void)
 {
-    double result;
+    number result;
     if (token == NUMBER) {
         result = num;
         get_token();
@@ -146,4 +181,3 @@ static double factor(void)
     }
     return result;
 }
-
