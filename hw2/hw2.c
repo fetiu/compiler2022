@@ -18,7 +18,7 @@ typedef struct {
     } type;
     union {
         int i;
-        float f;
+        double f;
     } val;
 } number;
 
@@ -118,7 +118,7 @@ int main(void)
     } else if (result.type == FLOAT) {
         printf("=%f\n", result.val.f);
     } else {
-        printf("=%d\n", result.val.i);
+        printf("=%i\n", result.val.i);
     }
     return 0;
 }
@@ -182,4 +182,3 @@ static number factor(void)
     }
     return result;
 }
-
