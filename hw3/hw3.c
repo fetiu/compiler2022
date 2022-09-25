@@ -19,19 +19,20 @@ enum terminal {
 } sym;
 
 struct production {
+    unsigned length;
     enum nonterminal {
         EXPRESSION,
         TERM,
         FACTOR,
         MAX_NONTERMINALS,
     } left;
-    unsigned length;
+    enum terminal right;
 } prod[MAX_GRAMMAR + 1] = {
-    [1] = {.length = 3, .left = EXPRESSION},
+    [1] = {.length = 3, .left = EXPRESSION, .right = PLUS},
     [2] = {.length = 1, .left = EXPRESSION},
-    [3] = {.length = 3, .left = TERM},
+    [3] = {.length = 3, .left = TERM, .right = STAR},
     [4] = {.length = 1, .left = TERM},
-    [5] = {.length = 3, .left = FACTOR},
+    [5] = {.length = 3, .left = FACTOR, .right = RPAREN},
     [6] = {.length = 1, .left = FACTOR},
 };
 
@@ -57,8 +58,12 @@ int go_to[MAX_STATES][MAX_NONTERMINALS] = {
     [7] = {[FACTOR] = 10},
 };
 
-static int stack[1000];
+struct {
+    int state;
+    int value;
+} stack[1000];
 static int top = -1;
+static int yyval;
 
 void yyparse(void);
 enum terminal yylex(void);
@@ -71,20 +76,35 @@ int main(void)
 
 void push(int i)
 {
-    stack[++top] = i;
+    stack[++top].state = i;
 }
 
 void shift(int i)
 {
     push(i);
+    stack[top].value = yyval;
     sym = yylex();
 }
 
-void reduce(int i)
+int calc(int old_top, enum terminal right)
 {
-    top -= prod[i].length;
+    int result = stack[old_top + 1].value;
+    if (right == PLUS) {
+        result += stack[old_top + 3].value;
+    } else if (right == STAR) {
+        result *= stack[old_top + 3].value;
+    } else if (right == RPAREN) {
+        result = stack[old_top + 2].value;
+    }
+    return result;
+}
+
+void reduce(int j)
+{
+    top -= prod[j].length;
     int old_top = top;
-    push(go_to[stack[old_top]][prod[i].left]);
+    push(go_to[stack[old_top].state][prod[j].left]);
+    stack[top].value = calc(old_top, prod[j].right);
 }
 
 void yyerror(void)
@@ -95,12 +115,12 @@ void yyerror(void)
 
 void yyparse(void)
 {
-    stack[++top] = 0;
+    stack[++top].state = 0;
     sym = yylex();
     while (1) {
-        int i = action[stack[top]][sym];
+        int i = action[stack[top].state][sym];
         if (i == ACC) {
-            printf("success!\n");
+            printf("success! %d\n", stack[top].value);
             break;
         } else if (i > 0) {
             shift(i);
@@ -118,7 +138,6 @@ void lex_error(void)
     exit(2);
 }
 
-int num;
 enum terminal yylex(void)
 {
     static char ch = ' ';
@@ -127,9 +146,9 @@ enum terminal yylex(void)
         ch = getchar();
     }
     if (isdigit(ch)) {
-        num = 0;
+        yyval = 0;
         do {
-            num = num * 10 + todigit(ch);
+            yyval = yyval * 10 + todigit(ch);
             ch = getchar();
         } while (isdigit(ch));
         return NUMBER;
