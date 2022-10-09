@@ -81,7 +81,9 @@ declarator
     : pointer direct_declarator
     | direct_declarator
 pointer
-    : STAR type_qualifier
+    : STAR
+    | STAR pointer
+    | STAR type_qualifier
     | STAR type_qualifier pointer
     /* TODO: check if none type_qualifier required */
 direct_declarator
