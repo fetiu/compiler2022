@@ -3,6 +3,7 @@ letter  [a-zA-z_]
 delim   [ \t]
 line    [\n]
 ws      {delim}+
+types   int|char|long|short|unsigned|signed|float|double|void
 %{
 #include "y.tab.h"
 %}
@@ -12,13 +13,16 @@ ws      {delim}+
 auto        {return AUTO_SYM;}
 break       {return BREAK_SYM;}
 case        {return CASE_SYM;}
+const       {return CONST_SYM;}
 continue    {return CONTINUE_SYM;}
 default     {return DEFAULT_SYM;}
 do          {return DO_SYM;}
 else        {return ELSE_SYM;}
 enum        {return ENUM_SYM;}
+extern      {return EXTERN_SYM;}
 for         {return FOR_SYM;}
 if          {return IF_SYM;}
+register    {return REGISTER_SYM;}
 return      {return RETURN_SYM;}
 sizeof      {return SIZEOF_SYM;}
 static      {return STATIC_SYM;}
@@ -57,9 +61,11 @@ while       {return WHILE_SYM;}
 "\+"        {return PLUS;}
 "\-"        {return MINUS;}
 "\="        {return ASSIGN;}
+{types}                     {return TYPE_IDENTIFIER;}
 {digit}+                    {return INTEGER_CONSTANT;}
 {digit}+\.{digit}+          {return FLOAT_CONSTANT;}
 {letter}({letter}|{digit})* {return IDENTIFIER;}
 \"([^"\n]|\\["\n])*\"       {return STRING_LITERAL;}
 \'([^'\n]|\'\')\'           {return CHARACTER_CONSTANT;}
+"/*"([^*/]|[^*]"/"|"*"[^/])*"*/"|"//"[^\n]* {} /* comments */
 %%
