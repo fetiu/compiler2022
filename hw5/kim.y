@@ -254,9 +254,9 @@ int main()
 }
 
 extern int yyget_lineno(void);
-extern char *yytext;
+extern char *yyget_text(void);
 int yyerror(const char *s)
 {
-    printf("line %d: %s near %s\n", yyget_lineno(), s, yytext);
+    printf("line %d: %s near %s\n", yyget_lineno(), s, yyget_text());
     return 0;
 }
