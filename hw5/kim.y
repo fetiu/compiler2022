@@ -40,12 +40,12 @@ type_specifier
 struct_specifier
     : struct_or_union IDENTIFIER LBRACE struct_declaration_list RBRACE
     | struct_or_union LBRACKET struct_declaration_list RBRACKET
-    | struct_or_union IDENTIFIER 
+    | struct_or_union IDENTIFIER
 struct_or_union
     : STRUCT_SYM | UNION_SYM
 struct_declaration_list
     : struct_declaration
-    | struct_declaration_list struct_declaration 
+    | struct_declaration_list struct_declaration
 struct_declaration
     : specifier_qualifier_list struct_declarator_list SEMICOLON
 specifier_qualifier_list
@@ -72,14 +72,15 @@ enumerator
 declarator
     : pointer direct_declarator
     | direct_declarator
-pointer 
-    : STAR type_qualifier /* TODO: check if none type qualifier required */
+pointer
+    : STAR type_qualifier
     | STAR type_qualifier pointer
+    /* TODO: check if none type_qualifier required */
 direct_declarator
     : IDENTIFIER
     | LPAREN declarator RPAREN
-    | direct_declarator RBRACKET constant_expression_opt LBRACKET
-    | direct_declarator RPAREN parameter_type_list LPAREN
+    | direct_declarator LBRACKET constant_expression_opt RBRACKET
+    | direct_declarator LPAREN parameter_type_list_opt RPAREN
 constant_expression_opt
     : /* empty */
     | constant_expression
@@ -100,7 +101,7 @@ abstract_declarator_opt
     | abstract_declarator
 abstract_declarator
     : pointer
-    | direct_abstract_declarator 
+    | direct_abstract_declarator
     | pointer direct_abstract_declarator
 direct_abstract_declarator
     : LPAREN abstract_declarator RPAREN
@@ -109,9 +110,9 @@ direct_abstract_declarator
     | direct_abstract_declarator LBRACKET constant_expression_opt RBRACKET
     | direct_abstract_declarator LPAREN parameter_type_list_opt RPAREN
 initializer
-    : expression
+    : assignment_expression
     | LBRACE initializer_list RBRACE
-    | LBRACE init_declarator_list COMMA RBRACE
+    | LBRACE initializer_list COMMA RBRACE
 initializer_list
     : initializer
     | initializer_list COMMA initializer
@@ -127,7 +128,7 @@ labled_statement
     | DEFAULT_SYM COLON statement
     /* | IDENTIFIER COLON statement */
 compound_statement
-    : LBRACKET declaration_list statement_list RBRACKET
+    : LBRACE declaration_list statement_list RBRACE
 declaration_list
     : /* empty */
     | declaration_list declaration
@@ -143,7 +144,7 @@ selection_statement
     | SWITCH_SYM LPAREN expression RPAREN statement
 iteration_statement
     : WHILE_SYM LPAREN expression RPAREN statement
-    | DO_SYM statement WHILE_SYM LPAREN expression RPAREN 
+    | DO_SYM statement WHILE_SYM LPAREN expression RPAREN
     | FOR_SYM LPAREN expression_opt SEMICOLON expression_opt SEMICOLON expression_opt RPAREN statement
 expression_opt
     : /* empty */
@@ -237,8 +238,7 @@ expression
     : assignment_expression
     | expression COMMA assignment_expression
 constant_expression
-    : expression
-
+    : conditional_expression
 %%
 
 
