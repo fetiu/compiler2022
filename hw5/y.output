@@ -1,0 +1,5177 @@
+State 28 conflicts: 1 shift/reduce
+State 45 conflicts: 1 shift/reduce
+State 65 conflicts: 1 shift/reduce
+State 86 conflicts: 1 shift/reduce
+State 100 conflicts: 1 shift/reduce
+State 110 conflicts: 1 shift/reduce
+State 126 conflicts: 1 shift/reduce
+State 129 conflicts: 1 shift/reduce
+State 174 conflicts: 3 reduce/reduce
+State 209 conflicts: 1 shift/reduce
+State 292 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: translation_unit
+
+    2 translation_unit: external_declaration
+    3                 | translation_unit external_declaration
+
+    4 external_declaration: function_definition
+    5                     | declaration
+
+    6 function_definition: declaration_specifiers declarator compound_statement
+    7                    | declarator compound_statement
+
+    8 declaration: declaration_specifiers init_declarator_list SEMICOLON
+
+    9 declaration_specifiers: type_specifier
+   10                       | storage_class_specifer
+   11                       | type_qualifier
+   12                       | type_specifier declaration_specifiers
+   13                       | storage_class_specifer declaration_specifiers
+   14                       | type_qualifier declaration_specifiers
+
+   15 storage_class_specifer: AUTO_SYM
+   16                       | STATIC_SYM
+   17                       | TYPEDEF_SYM
+   18                       | REGISTER_SYM
+   19                       | EXTERN_SYM
+
+   20 type_qualifier: CONST_SYM
+
+   21 init_declarator_list: init_declarator
+   22                     | init_declarator_list COMMA init_declarator
+
+   23 init_declarator: declarator
+   24                | declarator ASSIGN initializer
+
+   25 type_specifier: struct_specifier
+   26               | enum_specifier
+   27               | TYPE_IDENTIFIER
+
+   28 struct_specifier: struct_or_union IDENTIFIER LBRACE struct_declaration_list RBRACE
+   29                 | struct_or_union LBRACKET struct_declaration_list RBRACKET
+   30                 | struct_or_union IDENTIFIER
+
+   31 struct_or_union: STRUCT_SYM
+   32                | UNION_SYM
+
+   33 struct_declaration_list: struct_declaration
+   34                        | struct_declaration_list struct_declaration
+
+   35 struct_declaration: specifier_qualifier_list struct_declarator_list SEMICOLON
+
+   36 specifier_qualifier_list: type_specifier
+   37                         | type_qualifier
+   38                         | type_specifier specifier_qualifier_list
+   39                         | type_qualifier specifier_qualifier_list
+
+   40 struct_declarator_list: struct_declarator
+   41                       | struct_declarator_list COMMA struct_declarator
+
+   42 struct_declarator: declarator
+   43                  | COLON constant_expression
+   44                  | declarator COLON constant_expression
+
+   45 enum_specifier: ENUM_SYM IDENTIFIER LBRACE enumerator_list RBRACE
+   46               | ENUM_SYM LBRACE enumerator_list RBRACE
+   47               | ENUM_SYM IDENTIFIER
+
+   48 enumerator_list: enumerator
+   49                | enumerator_list COMMA enumerator
+
+   50 enumerator: IDENTIFIER
+   51           | IDENTIFIER ASSIGN constant_expression
+
+   52 declarator: pointer direct_declarator
+   53           | direct_declarator
+
+   54 pointer: STAR type_qualifier
+   55        | STAR type_qualifier pointer
+
+   56 direct_declarator: IDENTIFIER
+   57                  | LPAREN declarator RPAREN
+   58                  | direct_declarator RBRACKET constant_expression_opt LBRACKET
+   59                  | direct_declarator RPAREN parameter_type_list LPAREN
+
+   60 constant_expression_opt: /* empty */
+   61                        | constant_expression
+
+   62 parameter_type_list_opt: /* empty */
+   63                        | parameter_type_list
+
+   64 parameter_type_list: parameter_list
+   65                    | parameter_list COMMA DOTDOTDOT
+
+   66 parameter_list: parameter_declaration
+   67               | parameter_list COMMA parameter_declaration
+
+   68 parameter_declaration: declaration_specifiers declarator
+   69                      | declaration_specifiers abstract_declarator_opt
+
+   70 abstract_declarator_opt: /* empty */
+   71                        | abstract_declarator
+
+   72 abstract_declarator: pointer
+   73                    | direct_abstract_declarator
+   74                    | pointer direct_abstract_declarator
+
+   75 direct_abstract_declarator: LPAREN abstract_declarator RPAREN
+   76                           | LBRACKET constant_expression_opt RBRACKET
+   77                           | LPAREN parameter_type_list_opt RPAREN
+   78                           | direct_abstract_declarator LBRACKET constant_expression_opt RBRACKET
+   79                           | direct_abstract_declarator LPAREN parameter_type_list_opt RPAREN
+
+   80 initializer: expression
+   81            | LBRACE initializer_list RBRACE
+   82            | LBRACE init_declarator_list COMMA RBRACE
+
+   83 initializer_list: initializer
+   84                 | initializer_list COMMA initializer
+
+   85 statement: labled_statement
+   86          | compound_statement
+   87          | expression_statement
+   88          | selection_statement
+   89          | iteration_statement
+   90          | jump_statement
+
+   91 labled_statement: CASE_SYM constant_expression COLON statement
+   92                 | DEFAULT_SYM COLON statement
+
+   93 compound_statement: LBRACKET declaration_list statement_list RBRACKET
+
+   94 declaration_list: /* empty */
+   95                 | declaration_list declaration
+
+   96 statement_list: /* empty */
+   97               | statement_list statement
+
+   98 expression_statement: SEMICOLON
+   99                     | expression SEMICOLON
+
+  100 selection_statement: IF_SYM LPAREN expression RPAREN statement
+  101                    | IF_SYM LPAREN expression RPAREN statement ELSE_SYM statement
+  102                    | SWITCH_SYM LPAREN expression RPAREN statement
+
+  103 iteration_statement: WHILE_SYM LPAREN expression RPAREN statement
+  104                    | DO_SYM statement WHILE_SYM LPAREN expression RPAREN
+  105                    | FOR_SYM LPAREN expression_opt SEMICOLON expression_opt SEMICOLON expression_opt RPAREN statement
+
+  106 expression_opt: /* empty */
+  107               | expression
+
+  108 jump_statement: RETURN_SYM expression_opt SEMICOLON
+  109               | CONTINUE_SYM SEMICOLON
+  110               | BREAK_SYM SEMICOLON
+
+  111 primary_expression: IDENTIFIER
+  112                   | INTEGER_CONSTANT
+  113                   | FLOAT_CONSTANT
+  114                   | CHARACTER_CONSTANT
+  115                   | STRING_LITERAL
+  116                   | LPAREN expression RPAREN
+
+  117 postfix_expression: primary_expression
+  118                   | postfix_expression LBRACKET expression RBRACKET
+  119                   | postfix_expression LPAREN arg_expression_list_opt RPAREN
+  120                   | postfix_expression DOT IDENTIFIER
+  121                   | postfix_expression ARROW IDENTIFIER
+  122                   | postfix_expression PLUSPLUS
+  123                   | postfix_expression MINUSMINUS
+
+  124 arg_expression_list_opt: /* empty */
+  125                        | arg_expression_list
+
+  126 arg_expression_list: assignment_expression
+  127                    | arg_expression_list COMMA assignment_expression
+
+  128 unary_expression: postfix_expression
+  129                 | PLUSPLUS unary_expression
+  130                 | MINUSMINUS unary_expression
+  131                 | AMP cast_expression
+  132                 | STAR cast_expression
+  133                 | EXCLAM cast_expression
+  134                 | MINUS cast_expression
+  135                 | NOT cast_expression
+  136                 | PLUS cast_expression
+  137                 | SIZEOF_SYM unary_expression
+  138                 | SIZEOF_SYM LPAREN type_name RPAREN
+
+  139 cast_expression: unary_expression
+  140                | LPAREN type_name RPAREN cast_expression
+
+  141 type_name: declaration_specifiers
+  142          | declaration_specifiers abstract_declarator
+
+  143 multiplicative_expression: cast_expression
+  144                          | multiplicative_expression STAR cast_expression
+  145                          | multiplicative_expression SLASH cast_expression
+  146                          | multiplicative_expression PERCENT cast_expression
+
+  147 additive_expression: multiplicative_expression
+  148                    | additive_expression PLUS multiplicative_expression
+  149                    | additive_expression MINUS multiplicative_expression
+
+  150 shift_expression: additive_expression
+
+  151 relational_expression: shift_expression
+  152                      | relational_expression LESS shift_expression
+  153                      | relational_expression GREATER shift_expression
+  154                      | relational_expression LEQ shift_expression
+  155                      | relational_expression GEQ shift_expression
+
+  156 equality_expression: relational_expression
+  157                    | equality_expression EQUAL relational_expression
+  158                    | equality_expression NEQ relational_expression
+
+  159 AND_expression: equality_expression
+  160               | AND_expression AMP equality_expression
+
+  161 OR_expression: AND_expression
+  162              | OR_expression BAR AND_expression
+
+  163 logical_AND_expression: OR_expression
+  164                       | logical_AND_expression AMPAMP OR_expression
+
+  165 logical_OR_expression: logical_AND_expression
+  166                      | logical_OR_expression BARBAR logical_AND_expression
+
+  167 conditional_expression: logical_OR_expression
+
+  168 assignment_expression: conditional_expression
+  169                      | unary_expression ASSIGN assignment_expression
+
+  170 expression: assignment_expression
+  171           | expression COMMA assignment_expression
+
+  172 constant_expression: expression
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+IDENTIFIER (258) 28 30 45 47 50 51 56 111 120 121
+TYPE_IDENTIFIER (259) 27
+INTEGER_CONSTANT (260) 112
+FLOAT_CONSTANT (261) 113
+CHARACTER_CONSTANT (262) 114
+STRING_LITERAL (263) 115
+PLUS (264) 136 148
+MINUS (265) 134 149
+PLUSPLUS (266) 122 129
+MINUSMINUS (267) 123 130
+STAR (268) 54 55 132 144
+SLASH (269) 145
+PERCENT (270) 146
+LPAREN (271) 57 59 75 77 79 100 101 102 103 104 105 116 119 138 140
+RPAREN (272) 57 59 75 77 79 100 101 102 103 104 105 116 119 138 140
+LBRACE (273) 28 45 46 81 82
+RBRACE (274) 28 45 46 81 82
+LBRACKET (275) 29 58 76 78 93 118
+RBRACKET (276) 29 58 76 78 93 118
+ARROW (277) 121
+EQUAL (278) 157
+LESS (279) 152
+GREATER (280) 153
+EXCLAM (281) 133
+LEQ (282) 154
+GEQ (283) 155
+NEQ (284) 158
+AMPAMP (285) 164
+BARBAR (286) 166
+AMP (287) 131 160
+BAR (288) 162
+NOT (289) 135
+DOT (290) 120
+DOTDOTDOT (291) 65
+COLON (292) 43 44 91 92
+SEMICOLON (293) 8 35 98 99 105 108 109 110
+COMMA (294) 22 41 49 65 67 82 84 127 171
+ASSIGN (295) 24 51 169
+AUTO_SYM (296) 15
+STATIC_SYM (297) 16
+REGISTER_SYM (298) 18
+EXTERN_SYM (299) 19
+CONST_SYM (300) 20
+TYPEDEF_SYM (301) 17
+STRUCT_SYM (302) 31
+UNION_SYM (303) 32
+ENUM_SYM (304) 45 46 47
+SIZEOF_SYM (305) 137 138
+DO_SYM (306) 104
+WHILE_SYM (307) 103 104
+FOR_SYM (308) 105
+IF_SYM (309) 100 101
+ELSE_SYM (310) 101
+SWITCH_SYM (311) 102
+CASE_SYM (312) 91
+DEFAULT_SYM (313) 92
+RETURN_SYM (314) 108
+CONTINUE_SYM (315) 109
+BREAK_SYM (316) 110
+
+
+Nonterminals, with rules where they appear
+
+$accept (62)
+    on left: 0
+program (63)
+    on left: 1, on right: 0
+translation_unit (64)
+    on left: 2 3, on right: 1 3
+external_declaration (65)
+    on left: 4 5, on right: 2 3
+function_definition (66)
+    on left: 6 7, on right: 4
+declaration (67)
+    on left: 8, on right: 5 95
+declaration_specifiers (68)
+    on left: 9 10 11 12 13 14, on right: 6 8 12 13 14 68 69 141 142
+storage_class_specifer (69)
+    on left: 15 16 17 18 19, on right: 10 13
+type_qualifier (70)
+    on left: 20, on right: 11 14 37 39 54 55
+init_declarator_list (71)
+    on left: 21 22, on right: 8 22 82
+init_declarator (72)
+    on left: 23 24, on right: 21 22
+type_specifier (73)
+    on left: 25 26 27, on right: 9 12 36 38
+struct_specifier (74)
+    on left: 28 29 30, on right: 25
+struct_or_union (75)
+    on left: 31 32, on right: 28 29 30
+struct_declaration_list (76)
+    on left: 33 34, on right: 28 29 34
+struct_declaration (77)
+    on left: 35, on right: 33 34
+specifier_qualifier_list (78)
+    on left: 36 37 38 39, on right: 35 38 39
+struct_declarator_list (79)
+    on left: 40 41, on right: 35 41
+struct_declarator (80)
+    on left: 42 43 44, on right: 40 41
+enum_specifier (81)
+    on left: 45 46 47, on right: 26
+enumerator_list (82)
+    on left: 48 49, on right: 45 46 49
+enumerator (83)
+    on left: 50 51, on right: 48 49
+declarator (84)
+    on left: 52 53, on right: 6 7 23 24 42 44 57 68
+pointer (85)
+    on left: 54 55, on right: 52 55 72 74
+direct_declarator (86)
+    on left: 56 57 58 59, on right: 52 53 58 59
+constant_expression_opt (87)
+    on left: 60 61, on right: 58 76 78
+parameter_type_list_opt (88)
+    on left: 62 63, on right: 77 79
+parameter_type_list (89)
+    on left: 64 65, on right: 59 63
+parameter_list (90)
+    on left: 66 67, on right: 64 65 67
+parameter_declaration (91)
+    on left: 68 69, on right: 66 67
+abstract_declarator_opt (92)
+    on left: 70 71, on right: 69
+abstract_declarator (93)
+    on left: 72 73 74, on right: 71 75 142
+direct_abstract_declarator (94)
+    on left: 75 76 77 78 79, on right: 73 74 78 79
+initializer (95)
+    on left: 80 81 82, on right: 24 83 84
+initializer_list (96)
+    on left: 83 84, on right: 81 84
+statement (97)
+    on left: 85 86 87 88 89 90, on right: 91 92 97 100 101 102 103
+    104 105
+labled_statement (98)
+    on left: 91 92, on right: 85
+compound_statement (99)
+    on left: 93, on right: 6 7 86
+declaration_list (100)
+    on left: 94 95, on right: 93 95
+statement_list (101)
+    on left: 96 97, on right: 93 97
+expression_statement (102)
+    on left: 98 99, on right: 87
+selection_statement (103)
+    on left: 100 101 102, on right: 88
+iteration_statement (104)
+    on left: 103 104 105, on right: 89
+expression_opt (105)
+    on left: 106 107, on right: 105 108
+jump_statement (106)
+    on left: 108 109 110, on right: 90
+primary_expression (107)
+    on left: 111 112 113 114 115 116, on right: 117
+postfix_expression (108)
+    on left: 117 118 119 120 121 122 123, on right: 118 119 120 121
+    122 123 128
+arg_expression_list_opt (109)
+    on left: 124 125, on right: 119
+arg_expression_list (110)
+    on left: 126 127, on right: 125 127
+unary_expression (111)
+    on left: 128 129 130 131 132 133 134 135 136 137 138,
+    on right: 129 130 137 139 169
+cast_expression (112)
+    on left: 139 140, on right: 131 132 133 134 135 136 140 143 144
+    145 146
+type_name (113)
+    on left: 141 142, on right: 138 140
+multiplicative_expression (114)
+    on left: 143 144 145 146, on right: 144 145 146 147 148 149
+additive_expression (115)
+    on left: 147 148 149, on right: 148 149 150
+shift_expression (116)
+    on left: 150, on right: 151 152 153 154 155
+relational_expression (117)
+    on left: 151 152 153 154 155, on right: 152 153 154 155 156 157
+    158
+equality_expression (118)
+    on left: 156 157 158, on right: 157 158 159 160
+AND_expression (119)
+    on left: 159 160, on right: 160 161 162
+OR_expression (120)
+    on left: 161 162, on right: 162 163 164
+logical_AND_expression (121)
+    on left: 163 164, on right: 164 165 166
+logical_OR_expression (122)
+    on left: 165 166, on right: 166 167
+conditional_expression (123)
+    on left: 167, on right: 168
+assignment_expression (124)
+    on left: 168 169, on right: 126 127 169 170 171
+expression (125)
+    on left: 170 171, on right: 80 99 100 101 102 103 104 107 116 118
+    171 172
+constant_expression (126)
+    on left: 172, on right: 43 44 51 61 91
+
+
+state 0
+
+    0 $accept: . program $end
+
+    IDENTIFIER       shift, and go to state 1
+    TYPE_IDENTIFIER  shift, and go to state 2
+    STAR             shift, and go to state 3
+    LPAREN           shift, and go to state 4
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    program                 go to state 14
+    translation_unit        go to state 15
+    external_declaration    go to state 16
+    function_definition     go to state 17
+    declaration             go to state 18
+    declaration_specifiers  go to state 19
+    storage_class_specifer  go to state 20
+    type_qualifier          go to state 21
+    type_specifier          go to state 22
+    struct_specifier        go to state 23
+    struct_or_union         go to state 24
+    enum_specifier          go to state 25
+    declarator              go to state 26
+    pointer                 go to state 27
+    direct_declarator       go to state 28
+
+
+state 1
+
+   56 direct_declarator: IDENTIFIER .
+
+    $default  reduce using rule 56 (direct_declarator)
+
+
+state 2
+
+   27 type_specifier: TYPE_IDENTIFIER .
+
+    $default  reduce using rule 27 (type_specifier)
+
+
+state 3
+
+   54 pointer: STAR . type_qualifier
+   55        | STAR . type_qualifier pointer
+
+    CONST_SYM  shift, and go to state 9
+
+    type_qualifier  go to state 29
+
+
+state 4
+
+   57 direct_declarator: LPAREN . declarator RPAREN
+
+    IDENTIFIER  shift, and go to state 1
+    STAR        shift, and go to state 3
+    LPAREN      shift, and go to state 4
+
+    declarator         go to state 30
+    pointer            go to state 27
+    direct_declarator  go to state 28
+
+
+state 5
+
+   15 storage_class_specifer: AUTO_SYM .
+
+    $default  reduce using rule 15 (storage_class_specifer)
+
+
+state 6
+
+   16 storage_class_specifer: STATIC_SYM .
+
+    $default  reduce using rule 16 (storage_class_specifer)
+
+
+state 7
+
+   18 storage_class_specifer: REGISTER_SYM .
+
+    $default  reduce using rule 18 (storage_class_specifer)
+
+
+state 8
+
+   19 storage_class_specifer: EXTERN_SYM .
+
+    $default  reduce using rule 19 (storage_class_specifer)
+
+
+state 9
+
+   20 type_qualifier: CONST_SYM .
+
+    $default  reduce using rule 20 (type_qualifier)
+
+
+state 10
+
+   17 storage_class_specifer: TYPEDEF_SYM .
+
+    $default  reduce using rule 17 (storage_class_specifer)
+
+
+state 11
+
+   31 struct_or_union: STRUCT_SYM .
+
+    $default  reduce using rule 31 (struct_or_union)
+
+
+state 12
+
+   32 struct_or_union: UNION_SYM .
+
+    $default  reduce using rule 32 (struct_or_union)
+
+
+state 13
+
+   45 enum_specifier: ENUM_SYM . IDENTIFIER LBRACE enumerator_list RBRACE
+   46               | ENUM_SYM . LBRACE enumerator_list RBRACE
+   47               | ENUM_SYM . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 31
+    LBRACE      shift, and go to state 32
+
+
+state 14
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 33
+
+
+state 15
+
+    1 program: translation_unit .
+    3 translation_unit: translation_unit . external_declaration
+
+    IDENTIFIER       shift, and go to state 1
+    TYPE_IDENTIFIER  shift, and go to state 2
+    STAR             shift, and go to state 3
+    LPAREN           shift, and go to state 4
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 1 (program)
+
+    external_declaration    go to state 34
+    function_definition     go to state 17
+    declaration             go to state 18
+    declaration_specifiers  go to state 19
+    storage_class_specifer  go to state 20
+    type_qualifier          go to state 21
+    type_specifier          go to state 22
+    struct_specifier        go to state 23
+    struct_or_union         go to state 24
+    enum_specifier          go to state 25
+    declarator              go to state 26
+    pointer                 go to state 27
+    direct_declarator       go to state 28
+
+
+state 16
+
+    2 translation_unit: external_declaration .
+
+    $default  reduce using rule 2 (translation_unit)
+
+
+state 17
+
+    4 external_declaration: function_definition .
+
+    $default  reduce using rule 4 (external_declaration)
+
+
+state 18
+
+    5 external_declaration: declaration .
+
+    $default  reduce using rule 5 (external_declaration)
+
+
+state 19
+
+    6 function_definition: declaration_specifiers . declarator compound_statement
+    8 declaration: declaration_specifiers . init_declarator_list SEMICOLON
+
+    IDENTIFIER  shift, and go to state 1
+    STAR        shift, and go to state 3
+    LPAREN      shift, and go to state 4
+
+    init_declarator_list  go to state 35
+    init_declarator       go to state 36
+    declarator            go to state 37
+    pointer               go to state 27
+    direct_declarator     go to state 28
+
+
+state 20
+
+   10 declaration_specifiers: storage_class_specifer .
+   13                       | storage_class_specifer . declaration_specifiers
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 10 (declaration_specifiers)
+
+    declaration_specifiers  go to state 38
+    storage_class_specifer  go to state 20
+    type_qualifier          go to state 21
+    type_specifier          go to state 22
+    struct_specifier        go to state 23
+    struct_or_union         go to state 24
+    enum_specifier          go to state 25
+
+
+state 21
+
+   11 declaration_specifiers: type_qualifier .
+   14                       | type_qualifier . declaration_specifiers
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 11 (declaration_specifiers)
+
+    declaration_specifiers  go to state 39
+    storage_class_specifer  go to state 20
+    type_qualifier          go to state 21
+    type_specifier          go to state 22
+    struct_specifier        go to state 23
+    struct_or_union         go to state 24
+    enum_specifier          go to state 25
+
+
+state 22
+
+    9 declaration_specifiers: type_specifier .
+   12                       | type_specifier . declaration_specifiers
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 9 (declaration_specifiers)
+
+    declaration_specifiers  go to state 40
+    storage_class_specifer  go to state 20
+    type_qualifier          go to state 21
+    type_specifier          go to state 22
+    struct_specifier        go to state 23
+    struct_or_union         go to state 24
+    enum_specifier          go to state 25
+
+
+state 23
+
+   25 type_specifier: struct_specifier .
+
+    $default  reduce using rule 25 (type_specifier)
+
+
+state 24
+
+   28 struct_specifier: struct_or_union . IDENTIFIER LBRACE struct_declaration_list RBRACE
+   29                 | struct_or_union . LBRACKET struct_declaration_list RBRACKET
+   30                 | struct_or_union . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 41
+    LBRACKET    shift, and go to state 42
+
+
+state 25
+
+   26 type_specifier: enum_specifier .
+
+    $default  reduce using rule 26 (type_specifier)
+
+
+state 26
+
+    7 function_definition: declarator . compound_statement
+
+    LBRACKET  shift, and go to state 43
+
+    compound_statement  go to state 44
+
+
+state 27
+
+   52 declarator: pointer . direct_declarator
+
+    IDENTIFIER  shift, and go to state 1
+    LPAREN      shift, and go to state 4
+
+    direct_declarator  go to state 45
+
+
+state 28
+
+   53 declarator: direct_declarator .
+   58 direct_declarator: direct_declarator . RBRACKET constant_expression_opt LBRACKET
+   59                  | direct_declarator . RPAREN parameter_type_list LPAREN
+
+    RPAREN    shift, and go to state 46
+    RBRACKET  shift, and go to state 47
+
+    RPAREN    [reduce using rule 53 (declarator)]
+    $default  reduce using rule 53 (declarator)
+
+
+state 29
+
+   54 pointer: STAR type_qualifier .
+   55        | STAR type_qualifier . pointer
+
+    STAR  shift, and go to state 3
+
+    $default  reduce using rule 54 (pointer)
+
+    pointer  go to state 48
+
+
+state 30
+
+   57 direct_declarator: LPAREN declarator . RPAREN
+
+    RPAREN  shift, and go to state 49
+
+
+state 31
+
+   45 enum_specifier: ENUM_SYM IDENTIFIER . LBRACE enumerator_list RBRACE
+   47               | ENUM_SYM IDENTIFIER .
+
+    LBRACE  shift, and go to state 50
+
+    $default  reduce using rule 47 (enum_specifier)
+
+
+state 32
+
+   46 enum_specifier: ENUM_SYM LBRACE . enumerator_list RBRACE
+
+    IDENTIFIER  shift, and go to state 51
+
+    enumerator_list  go to state 52
+    enumerator       go to state 53
+
+
+state 33
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 34
+
+    3 translation_unit: translation_unit external_declaration .
+
+    $default  reduce using rule 3 (translation_unit)
+
+
+state 35
+
+    8 declaration: declaration_specifiers init_declarator_list . SEMICOLON
+   22 init_declarator_list: init_declarator_list . COMMA init_declarator
+
+    SEMICOLON  shift, and go to state 54
+    COMMA      shift, and go to state 55
+
+
+state 36
+
+   21 init_declarator_list: init_declarator .
+
+    $default  reduce using rule 21 (init_declarator_list)
+
+
+state 37
+
+    6 function_definition: declaration_specifiers declarator . compound_statement
+   23 init_declarator: declarator .
+   24                | declarator . ASSIGN initializer
+
+    LBRACKET  shift, and go to state 43
+    ASSIGN    shift, and go to state 56
+
+    $default  reduce using rule 23 (init_declarator)
+
+    compound_statement  go to state 57
+
+
+state 38
+
+   13 declaration_specifiers: storage_class_specifer declaration_specifiers .
+
+    $default  reduce using rule 13 (declaration_specifiers)
+
+
+state 39
+
+   14 declaration_specifiers: type_qualifier declaration_specifiers .
+
+    $default  reduce using rule 14 (declaration_specifiers)
+
+
+state 40
+
+   12 declaration_specifiers: type_specifier declaration_specifiers .
+
+    $default  reduce using rule 12 (declaration_specifiers)
+
+
+state 41
+
+   28 struct_specifier: struct_or_union IDENTIFIER . LBRACE struct_declaration_list RBRACE
+   30                 | struct_or_union IDENTIFIER .
+
+    LBRACE  shift, and go to state 58
+
+    $default  reduce using rule 30 (struct_specifier)
+
+
+state 42
+
+   29 struct_specifier: struct_or_union LBRACKET . struct_declaration_list RBRACKET
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    CONST_SYM        shift, and go to state 9
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    type_qualifier            go to state 59
+    type_specifier            go to state 60
+    struct_specifier          go to state 23
+    struct_or_union           go to state 24
+    struct_declaration_list   go to state 61
+    struct_declaration        go to state 62
+    specifier_qualifier_list  go to state 63
+    enum_specifier            go to state 25
+
+
+state 43
+
+   93 compound_statement: LBRACKET . declaration_list statement_list RBRACKET
+
+    $default  reduce using rule 94 (declaration_list)
+
+    declaration_list  go to state 64
+
+
+state 44
+
+    7 function_definition: declarator compound_statement .
+
+    $default  reduce using rule 7 (function_definition)
+
+
+state 45
+
+   52 declarator: pointer direct_declarator .
+   58 direct_declarator: direct_declarator . RBRACKET constant_expression_opt LBRACKET
+   59                  | direct_declarator . RPAREN parameter_type_list LPAREN
+
+    RPAREN    shift, and go to state 46
+    RBRACKET  shift, and go to state 47
+
+    RPAREN    [reduce using rule 52 (declarator)]
+    $default  reduce using rule 52 (declarator)
+
+
+state 46
+
+   59 direct_declarator: direct_declarator RPAREN . parameter_type_list LPAREN
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    declaration_specifiers  go to state 65
+    storage_class_specifer  go to state 20
+    type_qualifier          go to state 21
+    type_specifier          go to state 22
+    struct_specifier        go to state 23
+    struct_or_union         go to state 24
+    enum_specifier          go to state 25
+    parameter_type_list     go to state 66
+    parameter_list          go to state 67
+    parameter_declaration   go to state 68
+
+
+state 47
+
+   58 direct_declarator: direct_declarator RBRACKET . constant_expression_opt LBRACKET
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    $default  reduce using rule 60 (constant_expression_opt)
+
+    constant_expression_opt    go to state 84
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 100
+    constant_expression        go to state 101
+
+
+state 48
+
+   55 pointer: STAR type_qualifier pointer .
+
+    $default  reduce using rule 55 (pointer)
+
+
+state 49
+
+   57 direct_declarator: LPAREN declarator RPAREN .
+
+    $default  reduce using rule 57 (direct_declarator)
+
+
+state 50
+
+   45 enum_specifier: ENUM_SYM IDENTIFIER LBRACE . enumerator_list RBRACE
+
+    IDENTIFIER  shift, and go to state 51
+
+    enumerator_list  go to state 102
+    enumerator       go to state 53
+
+
+state 51
+
+   50 enumerator: IDENTIFIER .
+   51           | IDENTIFIER . ASSIGN constant_expression
+
+    ASSIGN  shift, and go to state 103
+
+    $default  reduce using rule 50 (enumerator)
+
+
+state 52
+
+   46 enum_specifier: ENUM_SYM LBRACE enumerator_list . RBRACE
+   49 enumerator_list: enumerator_list . COMMA enumerator
+
+    RBRACE  shift, and go to state 104
+    COMMA   shift, and go to state 105
+
+
+state 53
+
+   48 enumerator_list: enumerator .
+
+    $default  reduce using rule 48 (enumerator_list)
+
+
+state 54
+
+    8 declaration: declaration_specifiers init_declarator_list SEMICOLON .
+
+    $default  reduce using rule 8 (declaration)
+
+
+state 55
+
+   22 init_declarator_list: init_declarator_list COMMA . init_declarator
+
+    IDENTIFIER  shift, and go to state 1
+    STAR        shift, and go to state 3
+    LPAREN      shift, and go to state 4
+
+    init_declarator    go to state 106
+    declarator         go to state 107
+    pointer            go to state 27
+    direct_declarator  go to state 28
+
+
+state 56
+
+   24 init_declarator: declarator ASSIGN . initializer
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACE              shift, and go to state 108
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    initializer                go to state 109
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 110
+
+
+state 57
+
+    6 function_definition: declaration_specifiers declarator compound_statement .
+
+    $default  reduce using rule 6 (function_definition)
+
+
+state 58
+
+   28 struct_specifier: struct_or_union IDENTIFIER LBRACE . struct_declaration_list RBRACE
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    CONST_SYM        shift, and go to state 9
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    type_qualifier            go to state 59
+    type_specifier            go to state 60
+    struct_specifier          go to state 23
+    struct_or_union           go to state 24
+    struct_declaration_list   go to state 111
+    struct_declaration        go to state 62
+    specifier_qualifier_list  go to state 63
+    enum_specifier            go to state 25
+
+
+state 59
+
+   37 specifier_qualifier_list: type_qualifier .
+   39                         | type_qualifier . specifier_qualifier_list
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    CONST_SYM        shift, and go to state 9
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 37 (specifier_qualifier_list)
+
+    type_qualifier            go to state 59
+    type_specifier            go to state 60
+    struct_specifier          go to state 23
+    struct_or_union           go to state 24
+    specifier_qualifier_list  go to state 112
+    enum_specifier            go to state 25
+
+
+state 60
+
+   36 specifier_qualifier_list: type_specifier .
+   38                         | type_specifier . specifier_qualifier_list
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    CONST_SYM        shift, and go to state 9
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 36 (specifier_qualifier_list)
+
+    type_qualifier            go to state 59
+    type_specifier            go to state 60
+    struct_specifier          go to state 23
+    struct_or_union           go to state 24
+    specifier_qualifier_list  go to state 113
+    enum_specifier            go to state 25
+
+
+state 61
+
+   29 struct_specifier: struct_or_union LBRACKET struct_declaration_list . RBRACKET
+   34 struct_declaration_list: struct_declaration_list . struct_declaration
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    RBRACKET         shift, and go to state 114
+    CONST_SYM        shift, and go to state 9
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    type_qualifier            go to state 59
+    type_specifier            go to state 60
+    struct_specifier          go to state 23
+    struct_or_union           go to state 24
+    struct_declaration        go to state 115
+    specifier_qualifier_list  go to state 63
+    enum_specifier            go to state 25
+
+
+state 62
+
+   33 struct_declaration_list: struct_declaration .
+
+    $default  reduce using rule 33 (struct_declaration_list)
+
+
+state 63
+
+   35 struct_declaration: specifier_qualifier_list . struct_declarator_list SEMICOLON
+
+    IDENTIFIER  shift, and go to state 1
+    STAR        shift, and go to state 3
+    LPAREN      shift, and go to state 4
+    COLON       shift, and go to state 116
+
+    struct_declarator_list  go to state 117
+    struct_declarator       go to state 118
+    declarator              go to state 119
+    pointer                 go to state 27
+    direct_declarator       go to state 28
+
+
+state 64
+
+   93 compound_statement: LBRACKET declaration_list . statement_list RBRACKET
+   95 declaration_list: declaration_list . declaration
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 96 (statement_list)
+
+    declaration             go to state 120
+    declaration_specifiers  go to state 121
+    storage_class_specifer  go to state 20
+    type_qualifier          go to state 21
+    type_specifier          go to state 22
+    struct_specifier        go to state 23
+    struct_or_union         go to state 24
+    enum_specifier          go to state 25
+    statement_list          go to state 122
+
+
+state 65
+
+   68 parameter_declaration: declaration_specifiers . declarator
+   69                      | declaration_specifiers . abstract_declarator_opt
+
+    IDENTIFIER  shift, and go to state 1
+    STAR        shift, and go to state 3
+    LPAREN      shift, and go to state 123
+    LBRACKET    shift, and go to state 124
+
+    LPAREN    [reduce using rule 70 (abstract_declarator_opt)]
+    $default  reduce using rule 70 (abstract_declarator_opt)
+
+    declarator                  go to state 125
+    pointer                     go to state 126
+    direct_declarator           go to state 28
+    abstract_declarator_opt     go to state 127
+    abstract_declarator         go to state 128
+    direct_abstract_declarator  go to state 129
+
+
+state 66
+
+   59 direct_declarator: direct_declarator RPAREN parameter_type_list . LPAREN
+
+    LPAREN  shift, and go to state 130
+
+
+state 67
+
+   64 parameter_type_list: parameter_list .
+   65                    | parameter_list . COMMA DOTDOTDOT
+   67 parameter_list: parameter_list . COMMA parameter_declaration
+
+    COMMA  shift, and go to state 131
+
+    $default  reduce using rule 64 (parameter_type_list)
+
+
+state 68
+
+   66 parameter_list: parameter_declaration .
+
+    $default  reduce using rule 66 (parameter_list)
+
+
+state 69
+
+  111 primary_expression: IDENTIFIER .
+
+    $default  reduce using rule 111 (primary_expression)
+
+
+state 70
+
+  112 primary_expression: INTEGER_CONSTANT .
+
+    $default  reduce using rule 112 (primary_expression)
+
+
+state 71
+
+  113 primary_expression: FLOAT_CONSTANT .
+
+    $default  reduce using rule 113 (primary_expression)
+
+
+state 72
+
+  114 primary_expression: CHARACTER_CONSTANT .
+
+    $default  reduce using rule 114 (primary_expression)
+
+
+state 73
+
+  115 primary_expression: STRING_LITERAL .
+
+    $default  reduce using rule 115 (primary_expression)
+
+
+state 74
+
+  136 unary_expression: PLUS . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 133
+
+
+state 75
+
+  134 unary_expression: MINUS . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 134
+
+
+state 76
+
+  129 unary_expression: PLUSPLUS . unary_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 135
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 136
+
+
+state 77
+
+  130 unary_expression: MINUSMINUS . unary_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 135
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 137
+
+
+state 78
+
+  132 unary_expression: STAR . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 138
+
+
+state 79
+
+  116 primary_expression: LPAREN . expression RPAREN
+  140 cast_expression: LPAREN . type_name RPAREN cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    TYPE_IDENTIFIER     shift, and go to state 2
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    AUTO_SYM            shift, and go to state 5
+    STATIC_SYM          shift, and go to state 6
+    REGISTER_SYM        shift, and go to state 7
+    EXTERN_SYM          shift, and go to state 8
+    CONST_SYM           shift, and go to state 9
+    TYPEDEF_SYM         shift, and go to state 10
+    STRUCT_SYM          shift, and go to state 11
+    UNION_SYM           shift, and go to state 12
+    ENUM_SYM            shift, and go to state 13
+    SIZEOF_SYM          shift, and go to state 83
+
+    declaration_specifiers     go to state 139
+    storage_class_specifer     go to state 20
+    type_qualifier             go to state 21
+    type_specifier             go to state 22
+    struct_specifier           go to state 23
+    struct_or_union            go to state 24
+    enum_specifier             go to state 25
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    type_name                  go to state 140
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 141
+
+
+state 80
+
+  133 unary_expression: EXCLAM . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 142
+
+
+state 81
+
+  131 unary_expression: AMP . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 143
+
+
+state 82
+
+  135 unary_expression: NOT . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 144
+
+
+state 83
+
+  137 unary_expression: SIZEOF_SYM . unary_expression
+  138                 | SIZEOF_SYM . LPAREN type_name RPAREN
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 145
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 146
+
+
+state 84
+
+   58 direct_declarator: direct_declarator RBRACKET constant_expression_opt . LBRACKET
+
+    LBRACKET  shift, and go to state 147
+
+
+state 85
+
+  117 postfix_expression: primary_expression .
+
+    $default  reduce using rule 117 (postfix_expression)
+
+
+state 86
+
+  118 postfix_expression: postfix_expression . LBRACKET expression RBRACKET
+  119                   | postfix_expression . LPAREN arg_expression_list_opt RPAREN
+  120                   | postfix_expression . DOT IDENTIFIER
+  121                   | postfix_expression . ARROW IDENTIFIER
+  122                   | postfix_expression . PLUSPLUS
+  123                   | postfix_expression . MINUSMINUS
+  128 unary_expression: postfix_expression .
+
+    PLUSPLUS    shift, and go to state 148
+    MINUSMINUS  shift, and go to state 149
+    LPAREN      shift, and go to state 150
+    LBRACKET    shift, and go to state 151
+    ARROW       shift, and go to state 152
+    DOT         shift, and go to state 153
+
+    LBRACKET  [reduce using rule 128 (unary_expression)]
+    $default  reduce using rule 128 (unary_expression)
+
+
+state 87
+
+  139 cast_expression: unary_expression .
+  169 assignment_expression: unary_expression . ASSIGN assignment_expression
+
+    ASSIGN  shift, and go to state 154
+
+    $default  reduce using rule 139 (cast_expression)
+
+
+state 88
+
+  143 multiplicative_expression: cast_expression .
+
+    $default  reduce using rule 143 (multiplicative_expression)
+
+
+state 89
+
+  144 multiplicative_expression: multiplicative_expression . STAR cast_expression
+  145                          | multiplicative_expression . SLASH cast_expression
+  146                          | multiplicative_expression . PERCENT cast_expression
+  147 additive_expression: multiplicative_expression .
+
+    STAR     shift, and go to state 155
+    SLASH    shift, and go to state 156
+    PERCENT  shift, and go to state 157
+
+    $default  reduce using rule 147 (additive_expression)
+
+
+state 90
+
+  148 additive_expression: additive_expression . PLUS multiplicative_expression
+  149                    | additive_expression . MINUS multiplicative_expression
+  150 shift_expression: additive_expression .
+
+    PLUS   shift, and go to state 158
+    MINUS  shift, and go to state 159
+
+    $default  reduce using rule 150 (shift_expression)
+
+
+state 91
+
+  151 relational_expression: shift_expression .
+
+    $default  reduce using rule 151 (relational_expression)
+
+
+state 92
+
+  152 relational_expression: relational_expression . LESS shift_expression
+  153                      | relational_expression . GREATER shift_expression
+  154                      | relational_expression . LEQ shift_expression
+  155                      | relational_expression . GEQ shift_expression
+  156 equality_expression: relational_expression .
+
+    LESS     shift, and go to state 160
+    GREATER  shift, and go to state 161
+    LEQ      shift, and go to state 162
+    GEQ      shift, and go to state 163
+
+    $default  reduce using rule 156 (equality_expression)
+
+
+state 93
+
+  157 equality_expression: equality_expression . EQUAL relational_expression
+  158                    | equality_expression . NEQ relational_expression
+  159 AND_expression: equality_expression .
+
+    EQUAL  shift, and go to state 164
+    NEQ    shift, and go to state 165
+
+    $default  reduce using rule 159 (AND_expression)
+
+
+state 94
+
+  160 AND_expression: AND_expression . AMP equality_expression
+  161 OR_expression: AND_expression .
+
+    AMP  shift, and go to state 166
+
+    $default  reduce using rule 161 (OR_expression)
+
+
+state 95
+
+  162 OR_expression: OR_expression . BAR AND_expression
+  163 logical_AND_expression: OR_expression .
+
+    BAR  shift, and go to state 167
+
+    $default  reduce using rule 163 (logical_AND_expression)
+
+
+state 96
+
+  164 logical_AND_expression: logical_AND_expression . AMPAMP OR_expression
+  165 logical_OR_expression: logical_AND_expression .
+
+    AMPAMP  shift, and go to state 168
+
+    $default  reduce using rule 165 (logical_OR_expression)
+
+
+state 97
+
+  166 logical_OR_expression: logical_OR_expression . BARBAR logical_AND_expression
+  167 conditional_expression: logical_OR_expression .
+
+    BARBAR  shift, and go to state 169
+
+    $default  reduce using rule 167 (conditional_expression)
+
+
+state 98
+
+  168 assignment_expression: conditional_expression .
+
+    $default  reduce using rule 168 (assignment_expression)
+
+
+state 99
+
+  170 expression: assignment_expression .
+
+    $default  reduce using rule 170 (expression)
+
+
+state 100
+
+  171 expression: expression . COMMA assignment_expression
+  172 constant_expression: expression .
+
+    COMMA  shift, and go to state 170
+
+    COMMA     [reduce using rule 172 (constant_expression)]
+    $default  reduce using rule 172 (constant_expression)
+
+
+state 101
+
+   61 constant_expression_opt: constant_expression .
+
+    $default  reduce using rule 61 (constant_expression_opt)
+
+
+state 102
+
+   45 enum_specifier: ENUM_SYM IDENTIFIER LBRACE enumerator_list . RBRACE
+   49 enumerator_list: enumerator_list . COMMA enumerator
+
+    RBRACE  shift, and go to state 171
+    COMMA   shift, and go to state 105
+
+
+state 103
+
+   51 enumerator: IDENTIFIER ASSIGN . constant_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 100
+    constant_expression        go to state 172
+
+
+state 104
+
+   46 enum_specifier: ENUM_SYM LBRACE enumerator_list RBRACE .
+
+    $default  reduce using rule 46 (enum_specifier)
+
+
+state 105
+
+   49 enumerator_list: enumerator_list COMMA . enumerator
+
+    IDENTIFIER  shift, and go to state 51
+
+    enumerator  go to state 173
+
+
+state 106
+
+   22 init_declarator_list: init_declarator_list COMMA init_declarator .
+
+    $default  reduce using rule 22 (init_declarator_list)
+
+
+state 107
+
+   23 init_declarator: declarator .
+   24                | declarator . ASSIGN initializer
+
+    ASSIGN  shift, and go to state 56
+
+    $default  reduce using rule 23 (init_declarator)
+
+
+state 108
+
+   81 initializer: LBRACE . initializer_list RBRACE
+   82            | LBRACE . init_declarator_list COMMA RBRACE
+
+    IDENTIFIER          shift, and go to state 174
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 175
+    LPAREN              shift, and go to state 176
+    LBRACE              shift, and go to state 108
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    init_declarator_list       go to state 177
+    init_declarator            go to state 36
+    declarator                 go to state 107
+    pointer                    go to state 27
+    direct_declarator          go to state 28
+    initializer                go to state 178
+    initializer_list           go to state 179
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 110
+
+
+state 109
+
+   24 init_declarator: declarator ASSIGN initializer .
+
+    $default  reduce using rule 24 (init_declarator)
+
+
+state 110
+
+   80 initializer: expression .
+  171 expression: expression . COMMA assignment_expression
+
+    COMMA  shift, and go to state 170
+
+    COMMA     [reduce using rule 80 (initializer)]
+    $default  reduce using rule 80 (initializer)
+
+
+state 111
+
+   28 struct_specifier: struct_or_union IDENTIFIER LBRACE struct_declaration_list . RBRACE
+   34 struct_declaration_list: struct_declaration_list . struct_declaration
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    RBRACE           shift, and go to state 180
+    CONST_SYM        shift, and go to state 9
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    type_qualifier            go to state 59
+    type_specifier            go to state 60
+    struct_specifier          go to state 23
+    struct_or_union           go to state 24
+    struct_declaration        go to state 115
+    specifier_qualifier_list  go to state 63
+    enum_specifier            go to state 25
+
+
+state 112
+
+   39 specifier_qualifier_list: type_qualifier specifier_qualifier_list .
+
+    $default  reduce using rule 39 (specifier_qualifier_list)
+
+
+state 113
+
+   38 specifier_qualifier_list: type_specifier specifier_qualifier_list .
+
+    $default  reduce using rule 38 (specifier_qualifier_list)
+
+
+state 114
+
+   29 struct_specifier: struct_or_union LBRACKET struct_declaration_list RBRACKET .
+
+    $default  reduce using rule 29 (struct_specifier)
+
+
+state 115
+
+   34 struct_declaration_list: struct_declaration_list struct_declaration .
+
+    $default  reduce using rule 34 (struct_declaration_list)
+
+
+state 116
+
+   43 struct_declarator: COLON . constant_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 100
+    constant_expression        go to state 181
+
+
+state 117
+
+   35 struct_declaration: specifier_qualifier_list struct_declarator_list . SEMICOLON
+   41 struct_declarator_list: struct_declarator_list . COMMA struct_declarator
+
+    SEMICOLON  shift, and go to state 182
+    COMMA      shift, and go to state 183
+
+
+state 118
+
+   40 struct_declarator_list: struct_declarator .
+
+    $default  reduce using rule 40 (struct_declarator_list)
+
+
+state 119
+
+   42 struct_declarator: declarator .
+   44                  | declarator . COLON constant_expression
+
+    COLON  shift, and go to state 184
+
+    $default  reduce using rule 42 (struct_declarator)
+
+
+state 120
+
+   95 declaration_list: declaration_list declaration .
+
+    $default  reduce using rule 95 (declaration_list)
+
+
+state 121
+
+    8 declaration: declaration_specifiers . init_declarator_list SEMICOLON
+
+    IDENTIFIER  shift, and go to state 1
+    STAR        shift, and go to state 3
+    LPAREN      shift, and go to state 4
+
+    init_declarator_list  go to state 35
+    init_declarator       go to state 36
+    declarator            go to state 107
+    pointer               go to state 27
+    direct_declarator     go to state 28
+
+
+state 122
+
+   93 compound_statement: LBRACKET declaration_list statement_list . RBRACKET
+   97 statement_list: statement_list . statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    RBRACKET            shift, and go to state 185
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 197
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 123
+
+   57 direct_declarator: LPAREN . declarator RPAREN
+   75 direct_abstract_declarator: LPAREN . abstract_declarator RPAREN
+   77                           | LPAREN . parameter_type_list_opt RPAREN
+
+    IDENTIFIER       shift, and go to state 1
+    TYPE_IDENTIFIER  shift, and go to state 2
+    STAR             shift, and go to state 3
+    LPAREN           shift, and go to state 123
+    LBRACKET         shift, and go to state 124
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 62 (parameter_type_list_opt)
+
+    declaration_specifiers      go to state 65
+    storage_class_specifer      go to state 20
+    type_qualifier              go to state 21
+    type_specifier              go to state 22
+    struct_specifier            go to state 23
+    struct_or_union             go to state 24
+    enum_specifier              go to state 25
+    declarator                  go to state 30
+    pointer                     go to state 126
+    direct_declarator           go to state 28
+    parameter_type_list_opt     go to state 205
+    parameter_type_list         go to state 206
+    parameter_list              go to state 67
+    parameter_declaration       go to state 68
+    abstract_declarator         go to state 207
+    direct_abstract_declarator  go to state 129
+
+
+state 124
+
+   76 direct_abstract_declarator: LBRACKET . constant_expression_opt RBRACKET
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    $default  reduce using rule 60 (constant_expression_opt)
+
+    constant_expression_opt    go to state 208
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 100
+    constant_expression        go to state 101
+
+
+state 125
+
+   68 parameter_declaration: declaration_specifiers declarator .
+
+    $default  reduce using rule 68 (parameter_declaration)
+
+
+state 126
+
+   52 declarator: pointer . direct_declarator
+   72 abstract_declarator: pointer .
+   74                    | pointer . direct_abstract_declarator
+
+    IDENTIFIER  shift, and go to state 1
+    LPAREN      shift, and go to state 123
+    LBRACKET    shift, and go to state 124
+
+    LPAREN    [reduce using rule 72 (abstract_declarator)]
+    $default  reduce using rule 72 (abstract_declarator)
+
+    direct_declarator           go to state 45
+    direct_abstract_declarator  go to state 209
+
+
+state 127
+
+   69 parameter_declaration: declaration_specifiers abstract_declarator_opt .
+
+    $default  reduce using rule 69 (parameter_declaration)
+
+
+state 128
+
+   71 abstract_declarator_opt: abstract_declarator .
+
+    $default  reduce using rule 71 (abstract_declarator_opt)
+
+
+state 129
+
+   73 abstract_declarator: direct_abstract_declarator .
+   78 direct_abstract_declarator: direct_abstract_declarator . LBRACKET constant_expression_opt RBRACKET
+   79                           | direct_abstract_declarator . LPAREN parameter_type_list_opt RPAREN
+
+    LPAREN    shift, and go to state 210
+    LBRACKET  shift, and go to state 211
+
+    LPAREN    [reduce using rule 73 (abstract_declarator)]
+    $default  reduce using rule 73 (abstract_declarator)
+
+
+state 130
+
+   59 direct_declarator: direct_declarator RPAREN parameter_type_list LPAREN .
+
+    $default  reduce using rule 59 (direct_declarator)
+
+
+state 131
+
+   65 parameter_type_list: parameter_list COMMA . DOTDOTDOT
+   67 parameter_list: parameter_list COMMA . parameter_declaration
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    DOTDOTDOT        shift, and go to state 212
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    declaration_specifiers  go to state 65
+    storage_class_specifer  go to state 20
+    type_qualifier          go to state 21
+    type_specifier          go to state 22
+    struct_specifier        go to state 23
+    struct_or_union         go to state 24
+    enum_specifier          go to state 25
+    parameter_declaration   go to state 213
+
+
+state 132
+
+  139 cast_expression: unary_expression .
+
+    $default  reduce using rule 139 (cast_expression)
+
+
+state 133
+
+  136 unary_expression: PLUS cast_expression .
+
+    $default  reduce using rule 136 (unary_expression)
+
+
+state 134
+
+  134 unary_expression: MINUS cast_expression .
+
+    $default  reduce using rule 134 (unary_expression)
+
+
+state 135
+
+  116 primary_expression: LPAREN . expression RPAREN
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 141
+
+
+state 136
+
+  129 unary_expression: PLUSPLUS unary_expression .
+
+    $default  reduce using rule 129 (unary_expression)
+
+
+state 137
+
+  130 unary_expression: MINUSMINUS unary_expression .
+
+    $default  reduce using rule 130 (unary_expression)
+
+
+state 138
+
+  132 unary_expression: STAR cast_expression .
+
+    $default  reduce using rule 132 (unary_expression)
+
+
+state 139
+
+  141 type_name: declaration_specifiers .
+  142          | declaration_specifiers . abstract_declarator
+
+    STAR      shift, and go to state 3
+    LPAREN    shift, and go to state 214
+    LBRACKET  shift, and go to state 124
+
+    $default  reduce using rule 141 (type_name)
+
+    pointer                     go to state 215
+    abstract_declarator         go to state 216
+    direct_abstract_declarator  go to state 129
+
+
+state 140
+
+  140 cast_expression: LPAREN type_name . RPAREN cast_expression
+
+    RPAREN  shift, and go to state 217
+
+
+state 141
+
+  116 primary_expression: LPAREN expression . RPAREN
+  171 expression: expression . COMMA assignment_expression
+
+    RPAREN  shift, and go to state 218
+    COMMA   shift, and go to state 170
+
+
+state 142
+
+  133 unary_expression: EXCLAM cast_expression .
+
+    $default  reduce using rule 133 (unary_expression)
+
+
+state 143
+
+  131 unary_expression: AMP cast_expression .
+
+    $default  reduce using rule 131 (unary_expression)
+
+
+state 144
+
+  135 unary_expression: NOT cast_expression .
+
+    $default  reduce using rule 135 (unary_expression)
+
+
+state 145
+
+  116 primary_expression: LPAREN . expression RPAREN
+  138 unary_expression: SIZEOF_SYM LPAREN . type_name RPAREN
+
+    IDENTIFIER          shift, and go to state 69
+    TYPE_IDENTIFIER     shift, and go to state 2
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    AUTO_SYM            shift, and go to state 5
+    STATIC_SYM          shift, and go to state 6
+    REGISTER_SYM        shift, and go to state 7
+    EXTERN_SYM          shift, and go to state 8
+    CONST_SYM           shift, and go to state 9
+    TYPEDEF_SYM         shift, and go to state 10
+    STRUCT_SYM          shift, and go to state 11
+    UNION_SYM           shift, and go to state 12
+    ENUM_SYM            shift, and go to state 13
+    SIZEOF_SYM          shift, and go to state 83
+
+    declaration_specifiers     go to state 139
+    storage_class_specifer     go to state 20
+    type_qualifier             go to state 21
+    type_specifier             go to state 22
+    struct_specifier           go to state 23
+    struct_or_union            go to state 24
+    enum_specifier             go to state 25
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    type_name                  go to state 219
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 141
+
+
+state 146
+
+  137 unary_expression: SIZEOF_SYM unary_expression .
+
+    $default  reduce using rule 137 (unary_expression)
+
+
+state 147
+
+   58 direct_declarator: direct_declarator RBRACKET constant_expression_opt LBRACKET .
+
+    $default  reduce using rule 58 (direct_declarator)
+
+
+state 148
+
+  122 postfix_expression: postfix_expression PLUSPLUS .
+
+    $default  reduce using rule 122 (postfix_expression)
+
+
+state 149
+
+  123 postfix_expression: postfix_expression MINUSMINUS .
+
+    $default  reduce using rule 123 (postfix_expression)
+
+
+state 150
+
+  119 postfix_expression: postfix_expression LPAREN . arg_expression_list_opt RPAREN
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    $default  reduce using rule 124 (arg_expression_list_opt)
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    arg_expression_list_opt    go to state 220
+    arg_expression_list        go to state 221
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 222
+
+
+state 151
+
+  118 postfix_expression: postfix_expression LBRACKET . expression RBRACKET
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 223
+
+
+state 152
+
+  121 postfix_expression: postfix_expression ARROW . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 224
+
+
+state 153
+
+  120 postfix_expression: postfix_expression DOT . IDENTIFIER
+
+    IDENTIFIER  shift, and go to state 225
+
+
+state 154
+
+  169 assignment_expression: unary_expression ASSIGN . assignment_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 226
+
+
+state 155
+
+  144 multiplicative_expression: multiplicative_expression STAR . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 227
+
+
+state 156
+
+  145 multiplicative_expression: multiplicative_expression SLASH . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 228
+
+
+state 157
+
+  146 multiplicative_expression: multiplicative_expression PERCENT . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 229
+
+
+state 158
+
+  148 additive_expression: additive_expression PLUS . multiplicative_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 230
+
+
+state 159
+
+  149 additive_expression: additive_expression MINUS . multiplicative_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 231
+
+
+state 160
+
+  152 relational_expression: relational_expression LESS . shift_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 232
+
+
+state 161
+
+  153 relational_expression: relational_expression GREATER . shift_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 233
+
+
+state 162
+
+  154 relational_expression: relational_expression LEQ . shift_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 234
+
+
+state 163
+
+  155 relational_expression: relational_expression GEQ . shift_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 235
+
+
+state 164
+
+  157 equality_expression: equality_expression EQUAL . relational_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 236
+
+
+state 165
+
+  158 equality_expression: equality_expression NEQ . relational_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 237
+
+
+state 166
+
+  160 AND_expression: AND_expression AMP . equality_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 238
+
+
+state 167
+
+  162 OR_expression: OR_expression BAR . AND_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 239
+
+
+state 168
+
+  164 logical_AND_expression: logical_AND_expression AMPAMP . OR_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 240
+
+
+state 169
+
+  166 logical_OR_expression: logical_OR_expression BARBAR . logical_AND_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 132
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 241
+
+
+state 170
+
+  171 expression: expression COMMA . assignment_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 242
+
+
+state 171
+
+   45 enum_specifier: ENUM_SYM IDENTIFIER LBRACE enumerator_list RBRACE .
+
+    $default  reduce using rule 45 (enum_specifier)
+
+
+state 172
+
+   51 enumerator: IDENTIFIER ASSIGN constant_expression .
+
+    $default  reduce using rule 51 (enumerator)
+
+
+state 173
+
+   49 enumerator_list: enumerator_list COMMA enumerator .
+
+    $default  reduce using rule 49 (enumerator_list)
+
+
+state 174
+
+   56 direct_declarator: IDENTIFIER .
+  111 primary_expression: IDENTIFIER .
+
+    RPAREN    reduce using rule 56 (direct_declarator)
+    RPAREN    [reduce using rule 111 (primary_expression)]
+    RBRACKET  reduce using rule 56 (direct_declarator)
+    COMMA     reduce using rule 56 (direct_declarator)
+    COMMA     [reduce using rule 111 (primary_expression)]
+    ASSIGN    reduce using rule 56 (direct_declarator)
+    ASSIGN    [reduce using rule 111 (primary_expression)]
+    $default  reduce using rule 111 (primary_expression)
+
+
+state 175
+
+   54 pointer: STAR . type_qualifier
+   55        | STAR . type_qualifier pointer
+  132 unary_expression: STAR . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    CONST_SYM           shift, and go to state 9
+    SIZEOF_SYM          shift, and go to state 83
+
+    type_qualifier      go to state 29
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 138
+
+
+state 176
+
+   57 direct_declarator: LPAREN . declarator RPAREN
+  116 primary_expression: LPAREN . expression RPAREN
+  140 cast_expression: LPAREN . type_name RPAREN cast_expression
+
+    IDENTIFIER          shift, and go to state 174
+    TYPE_IDENTIFIER     shift, and go to state 2
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 175
+    LPAREN              shift, and go to state 176
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    AUTO_SYM            shift, and go to state 5
+    STATIC_SYM          shift, and go to state 6
+    REGISTER_SYM        shift, and go to state 7
+    EXTERN_SYM          shift, and go to state 8
+    CONST_SYM           shift, and go to state 9
+    TYPEDEF_SYM         shift, and go to state 10
+    STRUCT_SYM          shift, and go to state 11
+    UNION_SYM           shift, and go to state 12
+    ENUM_SYM            shift, and go to state 13
+    SIZEOF_SYM          shift, and go to state 83
+
+    declaration_specifiers     go to state 139
+    storage_class_specifer     go to state 20
+    type_qualifier             go to state 21
+    type_specifier             go to state 22
+    struct_specifier           go to state 23
+    struct_or_union            go to state 24
+    enum_specifier             go to state 25
+    declarator                 go to state 30
+    pointer                    go to state 27
+    direct_declarator          go to state 28
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    type_name                  go to state 140
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 141
+
+
+state 177
+
+   22 init_declarator_list: init_declarator_list . COMMA init_declarator
+   82 initializer: LBRACE init_declarator_list . COMMA RBRACE
+
+    COMMA  shift, and go to state 243
+
+
+state 178
+
+   83 initializer_list: initializer .
+
+    $default  reduce using rule 83 (initializer_list)
+
+
+state 179
+
+   81 initializer: LBRACE initializer_list . RBRACE
+   84 initializer_list: initializer_list . COMMA initializer
+
+    RBRACE  shift, and go to state 244
+    COMMA   shift, and go to state 245
+
+
+state 180
+
+   28 struct_specifier: struct_or_union IDENTIFIER LBRACE struct_declaration_list RBRACE .
+
+    $default  reduce using rule 28 (struct_specifier)
+
+
+state 181
+
+   43 struct_declarator: COLON constant_expression .
+
+    $default  reduce using rule 43 (struct_declarator)
+
+
+state 182
+
+   35 struct_declaration: specifier_qualifier_list struct_declarator_list SEMICOLON .
+
+    $default  reduce using rule 35 (struct_declaration)
+
+
+state 183
+
+   41 struct_declarator_list: struct_declarator_list COMMA . struct_declarator
+
+    IDENTIFIER  shift, and go to state 1
+    STAR        shift, and go to state 3
+    LPAREN      shift, and go to state 4
+    COLON       shift, and go to state 116
+
+    struct_declarator  go to state 246
+    declarator         go to state 119
+    pointer            go to state 27
+    direct_declarator  go to state 28
+
+
+state 184
+
+   44 struct_declarator: declarator COLON . constant_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 100
+    constant_expression        go to state 247
+
+
+state 185
+
+   93 compound_statement: LBRACKET declaration_list statement_list RBRACKET .
+
+    $default  reduce using rule 93 (compound_statement)
+
+
+state 186
+
+   98 expression_statement: SEMICOLON .
+
+    $default  reduce using rule 98 (expression_statement)
+
+
+state 187
+
+  104 iteration_statement: DO_SYM . statement WHILE_SYM LPAREN expression RPAREN
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 248
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 188
+
+  103 iteration_statement: WHILE_SYM . LPAREN expression RPAREN statement
+
+    LPAREN  shift, and go to state 249
+
+
+state 189
+
+  105 iteration_statement: FOR_SYM . LPAREN expression_opt SEMICOLON expression_opt SEMICOLON expression_opt RPAREN statement
+
+    LPAREN  shift, and go to state 250
+
+
+state 190
+
+  100 selection_statement: IF_SYM . LPAREN expression RPAREN statement
+  101                    | IF_SYM . LPAREN expression RPAREN statement ELSE_SYM statement
+
+    LPAREN  shift, and go to state 251
+
+
+state 191
+
+  102 selection_statement: SWITCH_SYM . LPAREN expression RPAREN statement
+
+    LPAREN  shift, and go to state 252
+
+
+state 192
+
+   91 labled_statement: CASE_SYM . constant_expression COLON statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 100
+    constant_expression        go to state 253
+
+
+state 193
+
+   92 labled_statement: DEFAULT_SYM . COLON statement
+
+    COLON  shift, and go to state 254
+
+
+state 194
+
+  108 jump_statement: RETURN_SYM . expression_opt SEMICOLON
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    $default  reduce using rule 106 (expression_opt)
+
+    expression_opt             go to state 255
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 256
+
+
+state 195
+
+  109 jump_statement: CONTINUE_SYM . SEMICOLON
+
+    SEMICOLON  shift, and go to state 257
+
+
+state 196
+
+  110 jump_statement: BREAK_SYM . SEMICOLON
+
+    SEMICOLON  shift, and go to state 258
+
+
+state 197
+
+   97 statement_list: statement_list statement .
+
+    $default  reduce using rule 97 (statement_list)
+
+
+state 198
+
+   85 statement: labled_statement .
+
+    $default  reduce using rule 85 (statement)
+
+
+state 199
+
+   86 statement: compound_statement .
+
+    $default  reduce using rule 86 (statement)
+
+
+state 200
+
+   87 statement: expression_statement .
+
+    $default  reduce using rule 87 (statement)
+
+
+state 201
+
+   88 statement: selection_statement .
+
+    $default  reduce using rule 88 (statement)
+
+
+state 202
+
+   89 statement: iteration_statement .
+
+    $default  reduce using rule 89 (statement)
+
+
+state 203
+
+   90 statement: jump_statement .
+
+    $default  reduce using rule 90 (statement)
+
+
+state 204
+
+   99 expression_statement: expression . SEMICOLON
+  171 expression: expression . COMMA assignment_expression
+
+    SEMICOLON  shift, and go to state 259
+    COMMA      shift, and go to state 170
+
+
+state 205
+
+   77 direct_abstract_declarator: LPAREN parameter_type_list_opt . RPAREN
+
+    RPAREN  shift, and go to state 260
+
+
+state 206
+
+   63 parameter_type_list_opt: parameter_type_list .
+
+    $default  reduce using rule 63 (parameter_type_list_opt)
+
+
+state 207
+
+   75 direct_abstract_declarator: LPAREN abstract_declarator . RPAREN
+
+    RPAREN  shift, and go to state 261
+
+
+state 208
+
+   76 direct_abstract_declarator: LBRACKET constant_expression_opt . RBRACKET
+
+    RBRACKET  shift, and go to state 262
+
+
+state 209
+
+   74 abstract_declarator: pointer direct_abstract_declarator .
+   78 direct_abstract_declarator: direct_abstract_declarator . LBRACKET constant_expression_opt RBRACKET
+   79                           | direct_abstract_declarator . LPAREN parameter_type_list_opt RPAREN
+
+    LPAREN    shift, and go to state 210
+    LBRACKET  shift, and go to state 211
+
+    LPAREN    [reduce using rule 74 (abstract_declarator)]
+    $default  reduce using rule 74 (abstract_declarator)
+
+
+state 210
+
+   79 direct_abstract_declarator: direct_abstract_declarator LPAREN . parameter_type_list_opt RPAREN
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 62 (parameter_type_list_opt)
+
+    declaration_specifiers   go to state 65
+    storage_class_specifer   go to state 20
+    type_qualifier           go to state 21
+    type_specifier           go to state 22
+    struct_specifier         go to state 23
+    struct_or_union          go to state 24
+    enum_specifier           go to state 25
+    parameter_type_list_opt  go to state 263
+    parameter_type_list      go to state 206
+    parameter_list           go to state 67
+    parameter_declaration    go to state 68
+
+
+state 211
+
+   78 direct_abstract_declarator: direct_abstract_declarator LBRACKET . constant_expression_opt RBRACKET
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    $default  reduce using rule 60 (constant_expression_opt)
+
+    constant_expression_opt    go to state 264
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 100
+    constant_expression        go to state 101
+
+
+state 212
+
+   65 parameter_type_list: parameter_list COMMA DOTDOTDOT .
+
+    $default  reduce using rule 65 (parameter_type_list)
+
+
+state 213
+
+   67 parameter_list: parameter_list COMMA parameter_declaration .
+
+    $default  reduce using rule 67 (parameter_list)
+
+
+state 214
+
+   75 direct_abstract_declarator: LPAREN . abstract_declarator RPAREN
+   77                           | LPAREN . parameter_type_list_opt RPAREN
+
+    TYPE_IDENTIFIER  shift, and go to state 2
+    STAR             shift, and go to state 3
+    LPAREN           shift, and go to state 214
+    LBRACKET         shift, and go to state 124
+    AUTO_SYM         shift, and go to state 5
+    STATIC_SYM       shift, and go to state 6
+    REGISTER_SYM     shift, and go to state 7
+    EXTERN_SYM       shift, and go to state 8
+    CONST_SYM        shift, and go to state 9
+    TYPEDEF_SYM      shift, and go to state 10
+    STRUCT_SYM       shift, and go to state 11
+    UNION_SYM        shift, and go to state 12
+    ENUM_SYM         shift, and go to state 13
+
+    $default  reduce using rule 62 (parameter_type_list_opt)
+
+    declaration_specifiers      go to state 65
+    storage_class_specifer      go to state 20
+    type_qualifier              go to state 21
+    type_specifier              go to state 22
+    struct_specifier            go to state 23
+    struct_or_union             go to state 24
+    enum_specifier              go to state 25
+    pointer                     go to state 215
+    parameter_type_list_opt     go to state 205
+    parameter_type_list         go to state 206
+    parameter_list              go to state 67
+    parameter_declaration       go to state 68
+    abstract_declarator         go to state 207
+    direct_abstract_declarator  go to state 129
+
+
+state 215
+
+   72 abstract_declarator: pointer .
+   74                    | pointer . direct_abstract_declarator
+
+    LPAREN    shift, and go to state 214
+    LBRACKET  shift, and go to state 124
+
+    $default  reduce using rule 72 (abstract_declarator)
+
+    direct_abstract_declarator  go to state 209
+
+
+state 216
+
+  142 type_name: declaration_specifiers abstract_declarator .
+
+    $default  reduce using rule 142 (type_name)
+
+
+state 217
+
+  140 cast_expression: LPAREN type_name RPAREN . cast_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression  go to state 85
+    postfix_expression  go to state 86
+    unary_expression    go to state 132
+    cast_expression     go to state 265
+
+
+state 218
+
+  116 primary_expression: LPAREN expression RPAREN .
+
+    $default  reduce using rule 116 (primary_expression)
+
+
+state 219
+
+  138 unary_expression: SIZEOF_SYM LPAREN type_name . RPAREN
+
+    RPAREN  shift, and go to state 266
+
+
+state 220
+
+  119 postfix_expression: postfix_expression LPAREN arg_expression_list_opt . RPAREN
+
+    RPAREN  shift, and go to state 267
+
+
+state 221
+
+  125 arg_expression_list_opt: arg_expression_list .
+  127 arg_expression_list: arg_expression_list . COMMA assignment_expression
+
+    COMMA  shift, and go to state 268
+
+    $default  reduce using rule 125 (arg_expression_list_opt)
+
+
+state 222
+
+  126 arg_expression_list: assignment_expression .
+
+    $default  reduce using rule 126 (arg_expression_list)
+
+
+state 223
+
+  118 postfix_expression: postfix_expression LBRACKET expression . RBRACKET
+  171 expression: expression . COMMA assignment_expression
+
+    RBRACKET  shift, and go to state 269
+    COMMA     shift, and go to state 170
+
+
+state 224
+
+  121 postfix_expression: postfix_expression ARROW IDENTIFIER .
+
+    $default  reduce using rule 121 (postfix_expression)
+
+
+state 225
+
+  120 postfix_expression: postfix_expression DOT IDENTIFIER .
+
+    $default  reduce using rule 120 (postfix_expression)
+
+
+state 226
+
+  169 assignment_expression: unary_expression ASSIGN assignment_expression .
+
+    $default  reduce using rule 169 (assignment_expression)
+
+
+state 227
+
+  144 multiplicative_expression: multiplicative_expression STAR cast_expression .
+
+    $default  reduce using rule 144 (multiplicative_expression)
+
+
+state 228
+
+  145 multiplicative_expression: multiplicative_expression SLASH cast_expression .
+
+    $default  reduce using rule 145 (multiplicative_expression)
+
+
+state 229
+
+  146 multiplicative_expression: multiplicative_expression PERCENT cast_expression .
+
+    $default  reduce using rule 146 (multiplicative_expression)
+
+
+state 230
+
+  144 multiplicative_expression: multiplicative_expression . STAR cast_expression
+  145                          | multiplicative_expression . SLASH cast_expression
+  146                          | multiplicative_expression . PERCENT cast_expression
+  148 additive_expression: additive_expression PLUS multiplicative_expression .
+
+    STAR     shift, and go to state 155
+    SLASH    shift, and go to state 156
+    PERCENT  shift, and go to state 157
+
+    $default  reduce using rule 148 (additive_expression)
+
+
+state 231
+
+  144 multiplicative_expression: multiplicative_expression . STAR cast_expression
+  145                          | multiplicative_expression . SLASH cast_expression
+  146                          | multiplicative_expression . PERCENT cast_expression
+  149 additive_expression: additive_expression MINUS multiplicative_expression .
+
+    STAR     shift, and go to state 155
+    SLASH    shift, and go to state 156
+    PERCENT  shift, and go to state 157
+
+    $default  reduce using rule 149 (additive_expression)
+
+
+state 232
+
+  152 relational_expression: relational_expression LESS shift_expression .
+
+    $default  reduce using rule 152 (relational_expression)
+
+
+state 233
+
+  153 relational_expression: relational_expression GREATER shift_expression .
+
+    $default  reduce using rule 153 (relational_expression)
+
+
+state 234
+
+  154 relational_expression: relational_expression LEQ shift_expression .
+
+    $default  reduce using rule 154 (relational_expression)
+
+
+state 235
+
+  155 relational_expression: relational_expression GEQ shift_expression .
+
+    $default  reduce using rule 155 (relational_expression)
+
+
+state 236
+
+  152 relational_expression: relational_expression . LESS shift_expression
+  153                      | relational_expression . GREATER shift_expression
+  154                      | relational_expression . LEQ shift_expression
+  155                      | relational_expression . GEQ shift_expression
+  157 equality_expression: equality_expression EQUAL relational_expression .
+
+    LESS     shift, and go to state 160
+    GREATER  shift, and go to state 161
+    LEQ      shift, and go to state 162
+    GEQ      shift, and go to state 163
+
+    $default  reduce using rule 157 (equality_expression)
+
+
+state 237
+
+  152 relational_expression: relational_expression . LESS shift_expression
+  153                      | relational_expression . GREATER shift_expression
+  154                      | relational_expression . LEQ shift_expression
+  155                      | relational_expression . GEQ shift_expression
+  158 equality_expression: equality_expression NEQ relational_expression .
+
+    LESS     shift, and go to state 160
+    GREATER  shift, and go to state 161
+    LEQ      shift, and go to state 162
+    GEQ      shift, and go to state 163
+
+    $default  reduce using rule 158 (equality_expression)
+
+
+state 238
+
+  157 equality_expression: equality_expression . EQUAL relational_expression
+  158                    | equality_expression . NEQ relational_expression
+  160 AND_expression: AND_expression AMP equality_expression .
+
+    EQUAL  shift, and go to state 164
+    NEQ    shift, and go to state 165
+
+    $default  reduce using rule 160 (AND_expression)
+
+
+state 239
+
+  160 AND_expression: AND_expression . AMP equality_expression
+  162 OR_expression: OR_expression BAR AND_expression .
+
+    AMP  shift, and go to state 166
+
+    $default  reduce using rule 162 (OR_expression)
+
+
+state 240
+
+  162 OR_expression: OR_expression . BAR AND_expression
+  164 logical_AND_expression: logical_AND_expression AMPAMP OR_expression .
+
+    BAR  shift, and go to state 167
+
+    $default  reduce using rule 164 (logical_AND_expression)
+
+
+state 241
+
+  164 logical_AND_expression: logical_AND_expression . AMPAMP OR_expression
+  166 logical_OR_expression: logical_OR_expression BARBAR logical_AND_expression .
+
+    AMPAMP  shift, and go to state 168
+
+    $default  reduce using rule 166 (logical_OR_expression)
+
+
+state 242
+
+  171 expression: expression COMMA assignment_expression .
+
+    $default  reduce using rule 171 (expression)
+
+
+state 243
+
+   22 init_declarator_list: init_declarator_list COMMA . init_declarator
+   82 initializer: LBRACE init_declarator_list COMMA . RBRACE
+
+    IDENTIFIER  shift, and go to state 1
+    STAR        shift, and go to state 3
+    LPAREN      shift, and go to state 4
+    RBRACE      shift, and go to state 270
+
+    init_declarator    go to state 106
+    declarator         go to state 107
+    pointer            go to state 27
+    direct_declarator  go to state 28
+
+
+state 244
+
+   81 initializer: LBRACE initializer_list RBRACE .
+
+    $default  reduce using rule 81 (initializer)
+
+
+state 245
+
+   84 initializer_list: initializer_list COMMA . initializer
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACE              shift, and go to state 108
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    initializer                go to state 271
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 110
+
+
+state 246
+
+   41 struct_declarator_list: struct_declarator_list COMMA struct_declarator .
+
+    $default  reduce using rule 41 (struct_declarator_list)
+
+
+state 247
+
+   44 struct_declarator: declarator COLON constant_expression .
+
+    $default  reduce using rule 44 (struct_declarator)
+
+
+state 248
+
+  104 iteration_statement: DO_SYM statement . WHILE_SYM LPAREN expression RPAREN
+
+    WHILE_SYM  shift, and go to state 272
+
+
+state 249
+
+  103 iteration_statement: WHILE_SYM LPAREN . expression RPAREN statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 273
+
+
+state 250
+
+  105 iteration_statement: FOR_SYM LPAREN . expression_opt SEMICOLON expression_opt SEMICOLON expression_opt RPAREN statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    $default  reduce using rule 106 (expression_opt)
+
+    expression_opt             go to state 274
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 256
+
+
+state 251
+
+  100 selection_statement: IF_SYM LPAREN . expression RPAREN statement
+  101                    | IF_SYM LPAREN . expression RPAREN statement ELSE_SYM statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 275
+
+
+state 252
+
+  102 selection_statement: SWITCH_SYM LPAREN . expression RPAREN statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 276
+
+
+state 253
+
+   91 labled_statement: CASE_SYM constant_expression . COLON statement
+
+    COLON  shift, and go to state 277
+
+
+state 254
+
+   92 labled_statement: DEFAULT_SYM COLON . statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 278
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 255
+
+  108 jump_statement: RETURN_SYM expression_opt . SEMICOLON
+
+    SEMICOLON  shift, and go to state 279
+
+
+state 256
+
+  107 expression_opt: expression .
+  171 expression: expression . COMMA assignment_expression
+
+    COMMA  shift, and go to state 170
+
+    $default  reduce using rule 107 (expression_opt)
+
+
+state 257
+
+  109 jump_statement: CONTINUE_SYM SEMICOLON .
+
+    $default  reduce using rule 109 (jump_statement)
+
+
+state 258
+
+  110 jump_statement: BREAK_SYM SEMICOLON .
+
+    $default  reduce using rule 110 (jump_statement)
+
+
+state 259
+
+   99 expression_statement: expression SEMICOLON .
+
+    $default  reduce using rule 99 (expression_statement)
+
+
+state 260
+
+   77 direct_abstract_declarator: LPAREN parameter_type_list_opt RPAREN .
+
+    $default  reduce using rule 77 (direct_abstract_declarator)
+
+
+state 261
+
+   75 direct_abstract_declarator: LPAREN abstract_declarator RPAREN .
+
+    $default  reduce using rule 75 (direct_abstract_declarator)
+
+
+state 262
+
+   76 direct_abstract_declarator: LBRACKET constant_expression_opt RBRACKET .
+
+    $default  reduce using rule 76 (direct_abstract_declarator)
+
+
+state 263
+
+   79 direct_abstract_declarator: direct_abstract_declarator LPAREN parameter_type_list_opt . RPAREN
+
+    RPAREN  shift, and go to state 280
+
+
+state 264
+
+   78 direct_abstract_declarator: direct_abstract_declarator LBRACKET constant_expression_opt . RBRACKET
+
+    RBRACKET  shift, and go to state 281
+
+
+state 265
+
+  140 cast_expression: LPAREN type_name RPAREN cast_expression .
+
+    $default  reduce using rule 140 (cast_expression)
+
+
+state 266
+
+  138 unary_expression: SIZEOF_SYM LPAREN type_name RPAREN .
+
+    $default  reduce using rule 138 (unary_expression)
+
+
+state 267
+
+  119 postfix_expression: postfix_expression LPAREN arg_expression_list_opt RPAREN .
+
+    $default  reduce using rule 119 (postfix_expression)
+
+
+state 268
+
+  127 arg_expression_list: arg_expression_list COMMA . assignment_expression
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 282
+
+
+state 269
+
+  118 postfix_expression: postfix_expression LBRACKET expression RBRACKET .
+
+    $default  reduce using rule 118 (postfix_expression)
+
+
+state 270
+
+   82 initializer: LBRACE init_declarator_list COMMA RBRACE .
+
+    $default  reduce using rule 82 (initializer)
+
+
+state 271
+
+   84 initializer_list: initializer_list COMMA initializer .
+
+    $default  reduce using rule 84 (initializer_list)
+
+
+state 272
+
+  104 iteration_statement: DO_SYM statement WHILE_SYM . LPAREN expression RPAREN
+
+    LPAREN  shift, and go to state 283
+
+
+state 273
+
+  103 iteration_statement: WHILE_SYM LPAREN expression . RPAREN statement
+  171 expression: expression . COMMA assignment_expression
+
+    RPAREN  shift, and go to state 284
+    COMMA   shift, and go to state 170
+
+
+state 274
+
+  105 iteration_statement: FOR_SYM LPAREN expression_opt . SEMICOLON expression_opt SEMICOLON expression_opt RPAREN statement
+
+    SEMICOLON  shift, and go to state 285
+
+
+state 275
+
+  100 selection_statement: IF_SYM LPAREN expression . RPAREN statement
+  101                    | IF_SYM LPAREN expression . RPAREN statement ELSE_SYM statement
+  171 expression: expression . COMMA assignment_expression
+
+    RPAREN  shift, and go to state 286
+    COMMA   shift, and go to state 170
+
+
+state 276
+
+  102 selection_statement: SWITCH_SYM LPAREN expression . RPAREN statement
+  171 expression: expression . COMMA assignment_expression
+
+    RPAREN  shift, and go to state 287
+    COMMA   shift, and go to state 170
+
+
+state 277
+
+   91 labled_statement: CASE_SYM constant_expression COLON . statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 288
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 278
+
+   92 labled_statement: DEFAULT_SYM COLON statement .
+
+    $default  reduce using rule 92 (labled_statement)
+
+
+state 279
+
+  108 jump_statement: RETURN_SYM expression_opt SEMICOLON .
+
+    $default  reduce using rule 108 (jump_statement)
+
+
+state 280
+
+   79 direct_abstract_declarator: direct_abstract_declarator LPAREN parameter_type_list_opt RPAREN .
+
+    $default  reduce using rule 79 (direct_abstract_declarator)
+
+
+state 281
+
+   78 direct_abstract_declarator: direct_abstract_declarator LBRACKET constant_expression_opt RBRACKET .
+
+    $default  reduce using rule 78 (direct_abstract_declarator)
+
+
+state 282
+
+  127 arg_expression_list: arg_expression_list COMMA assignment_expression .
+
+    $default  reduce using rule 127 (arg_expression_list)
+
+
+state 283
+
+  104 iteration_statement: DO_SYM statement WHILE_SYM LPAREN . expression RPAREN
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 289
+
+
+state 284
+
+  103 iteration_statement: WHILE_SYM LPAREN expression RPAREN . statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 290
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 285
+
+  105 iteration_statement: FOR_SYM LPAREN expression_opt SEMICOLON . expression_opt SEMICOLON expression_opt RPAREN statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    $default  reduce using rule 106 (expression_opt)
+
+    expression_opt             go to state 291
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 256
+
+
+state 286
+
+  100 selection_statement: IF_SYM LPAREN expression RPAREN . statement
+  101                    | IF_SYM LPAREN expression RPAREN . statement ELSE_SYM statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 292
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 287
+
+  102 selection_statement: SWITCH_SYM LPAREN expression RPAREN . statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 293
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 288
+
+   91 labled_statement: CASE_SYM constant_expression COLON statement .
+
+    $default  reduce using rule 91 (labled_statement)
+
+
+state 289
+
+  104 iteration_statement: DO_SYM statement WHILE_SYM LPAREN expression . RPAREN
+  171 expression: expression . COMMA assignment_expression
+
+    RPAREN  shift, and go to state 294
+    COMMA   shift, and go to state 170
+
+
+state 290
+
+  103 iteration_statement: WHILE_SYM LPAREN expression RPAREN statement .
+
+    $default  reduce using rule 103 (iteration_statement)
+
+
+state 291
+
+  105 iteration_statement: FOR_SYM LPAREN expression_opt SEMICOLON expression_opt . SEMICOLON expression_opt RPAREN statement
+
+    SEMICOLON  shift, and go to state 295
+
+
+state 292
+
+  100 selection_statement: IF_SYM LPAREN expression RPAREN statement .
+  101                    | IF_SYM LPAREN expression RPAREN statement . ELSE_SYM statement
+
+    ELSE_SYM  shift, and go to state 296
+
+    ELSE_SYM  [reduce using rule 100 (selection_statement)]
+    $default  reduce using rule 100 (selection_statement)
+
+
+state 293
+
+  102 selection_statement: SWITCH_SYM LPAREN expression RPAREN statement .
+
+    $default  reduce using rule 102 (selection_statement)
+
+
+state 294
+
+  104 iteration_statement: DO_SYM statement WHILE_SYM LPAREN expression RPAREN .
+
+    $default  reduce using rule 104 (iteration_statement)
+
+
+state 295
+
+  105 iteration_statement: FOR_SYM LPAREN expression_opt SEMICOLON expression_opt SEMICOLON . expression_opt RPAREN statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SIZEOF_SYM          shift, and go to state 83
+
+    $default  reduce using rule 106 (expression_opt)
+
+    expression_opt             go to state 297
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 256
+
+
+state 296
+
+  101 selection_statement: IF_SYM LPAREN expression RPAREN statement ELSE_SYM . statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 298
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 297
+
+  105 iteration_statement: FOR_SYM LPAREN expression_opt SEMICOLON expression_opt SEMICOLON expression_opt . RPAREN statement
+
+    RPAREN  shift, and go to state 299
+
+
+state 298
+
+  101 selection_statement: IF_SYM LPAREN expression RPAREN statement ELSE_SYM statement .
+
+    $default  reduce using rule 101 (selection_statement)
+
+
+state 299
+
+  105 iteration_statement: FOR_SYM LPAREN expression_opt SEMICOLON expression_opt SEMICOLON expression_opt RPAREN . statement
+
+    IDENTIFIER          shift, and go to state 69
+    INTEGER_CONSTANT    shift, and go to state 70
+    FLOAT_CONSTANT      shift, and go to state 71
+    CHARACTER_CONSTANT  shift, and go to state 72
+    STRING_LITERAL      shift, and go to state 73
+    PLUS                shift, and go to state 74
+    MINUS               shift, and go to state 75
+    PLUSPLUS            shift, and go to state 76
+    MINUSMINUS          shift, and go to state 77
+    STAR                shift, and go to state 78
+    LPAREN              shift, and go to state 79
+    LBRACKET            shift, and go to state 43
+    EXCLAM              shift, and go to state 80
+    AMP                 shift, and go to state 81
+    NOT                 shift, and go to state 82
+    SEMICOLON           shift, and go to state 186
+    SIZEOF_SYM          shift, and go to state 83
+    DO_SYM              shift, and go to state 187
+    WHILE_SYM           shift, and go to state 188
+    FOR_SYM             shift, and go to state 189
+    IF_SYM              shift, and go to state 190
+    SWITCH_SYM          shift, and go to state 191
+    CASE_SYM            shift, and go to state 192
+    DEFAULT_SYM         shift, and go to state 193
+    RETURN_SYM          shift, and go to state 194
+    CONTINUE_SYM        shift, and go to state 195
+    BREAK_SYM           shift, and go to state 196
+
+    statement                  go to state 300
+    labled_statement           go to state 198
+    compound_statement         go to state 199
+    expression_statement       go to state 200
+    selection_statement        go to state 201
+    iteration_statement        go to state 202
+    jump_statement             go to state 203
+    primary_expression         go to state 85
+    postfix_expression         go to state 86
+    unary_expression           go to state 87
+    cast_expression            go to state 88
+    multiplicative_expression  go to state 89
+    additive_expression        go to state 90
+    shift_expression           go to state 91
+    relational_expression      go to state 92
+    equality_expression        go to state 93
+    AND_expression             go to state 94
+    OR_expression              go to state 95
+    logical_AND_expression     go to state 96
+    logical_OR_expression      go to state 97
+    conditional_expression     go to state 98
+    assignment_expression      go to state 99
+    expression                 go to state 204
+
+
+state 300
+
+  105 iteration_statement: FOR_SYM LPAREN expression_opt SEMICOLON expression_opt SEMICOLON expression_opt RPAREN statement .
+
+    $default  reduce using rule 105 (iteration_statement)
