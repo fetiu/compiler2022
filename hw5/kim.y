@@ -6,6 +6,14 @@
 
 %start program
 
+%{
+#include <stdio.h>
+
+int yylex(void);
+int yyerror(const char *s);
+int yywrap(void) {return 1;}
+%}
+
 %%
 program
     : translation_unit
@@ -238,8 +246,15 @@ constant_expression
     : conditional_expression
 %%
 
-
-void main()
+int main()
 {
-    yyparse();
+    yyparse() || puts("success");
+}
+
+extern int yyget_lineno(void);
+extern char *yytext;
+int yyerror(const char *s)
+{
+    printf("line %d: %s near %s\n", yyget_lineno(), s, yytext);
+    return 0;
 }
