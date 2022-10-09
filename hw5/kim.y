@@ -37,7 +37,7 @@ declaration_specifiers
 storage_class_specifer
     : AUTO_SYM | STATIC_SYM | TYPEDEF_SYM | REGISTER_SYM | EXTERN_SYM
 type_qualifier
-    : CONST_SYM
+    : CONST_SYM /* | VOLITILE_SYM */
 init_declarator_list
     : init_declarator
     | init_declarator_list COMMA init_declarator
