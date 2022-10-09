@@ -1,13 +1,8 @@
 State 28 conflicts: 1 shift/reduce
 State 45 conflicts: 1 shift/reduce
-State 65 conflicts: 1 shift/reduce
-State 86 conflicts: 1 shift/reduce
 State 100 conflicts: 1 shift/reduce
 State 110 conflicts: 1 shift/reduce
-State 126 conflicts: 1 shift/reduce
-State 129 conflicts: 1 shift/reduce
-State 174 conflicts: 3 reduce/reduce
-State 209 conflicts: 1 shift/reduce
+State 174 conflicts: 5 reduce/reduce
 State 292 conflicts: 1 shift/reduce
 
 
@@ -95,8 +90,8 @@ Grammar
 
    56 direct_declarator: IDENTIFIER
    57                  | LPAREN declarator RPAREN
-   58                  | direct_declarator RBRACKET constant_expression_opt LBRACKET
-   59                  | direct_declarator RPAREN parameter_type_list LPAREN
+   58                  | direct_declarator LBRACKET constant_expression_opt RBRACKET
+   59                  | direct_declarator LPAREN parameter_type_list RPAREN
 
    60 constant_expression_opt: /* empty */
    61                        | constant_expression
@@ -802,13 +797,13 @@ state 27
 state 28
 
    53 declarator: direct_declarator .
-   58 direct_declarator: direct_declarator . RBRACKET constant_expression_opt LBRACKET
-   59                  | direct_declarator . RPAREN parameter_type_list LPAREN
+   58 direct_declarator: direct_declarator . LBRACKET constant_expression_opt RBRACKET
+   59                  | direct_declarator . LPAREN parameter_type_list RPAREN
 
-    RPAREN    shift, and go to state 46
-    RBRACKET  shift, and go to state 47
+    LPAREN    shift, and go to state 46
+    LBRACKET  shift, and go to state 47
 
-    RPAREN    [reduce using rule 53 (declarator)]
+    LBRACKET  [reduce using rule 53 (declarator)]
     $default  reduce using rule 53 (declarator)
 
 
@@ -965,19 +960,19 @@ state 44
 state 45
 
    52 declarator: pointer direct_declarator .
-   58 direct_declarator: direct_declarator . RBRACKET constant_expression_opt LBRACKET
-   59                  | direct_declarator . RPAREN parameter_type_list LPAREN
+   58 direct_declarator: direct_declarator . LBRACKET constant_expression_opt RBRACKET
+   59                  | direct_declarator . LPAREN parameter_type_list RPAREN
 
-    RPAREN    shift, and go to state 46
-    RBRACKET  shift, and go to state 47
+    LPAREN    shift, and go to state 46
+    LBRACKET  shift, and go to state 47
 
-    RPAREN    [reduce using rule 52 (declarator)]
+    LBRACKET  [reduce using rule 52 (declarator)]
     $default  reduce using rule 52 (declarator)
 
 
 state 46
 
-   59 direct_declarator: direct_declarator RPAREN . parameter_type_list LPAREN
+   59 direct_declarator: direct_declarator LPAREN . parameter_type_list RPAREN
 
     TYPE_IDENTIFIER  shift, and go to state 2
     AUTO_SYM         shift, and go to state 5
@@ -1004,7 +999,7 @@ state 46
 
 state 47
 
-   58 direct_declarator: direct_declarator RBRACKET . constant_expression_opt LBRACKET
+   58 direct_declarator: direct_declarator LBRACKET . constant_expression_opt RBRACKET
 
     IDENTIFIER          shift, and go to state 69
     INTEGER_CONSTANT    shift, and go to state 70
@@ -1307,7 +1302,6 @@ state 65
     LPAREN      shift, and go to state 123
     LBRACKET    shift, and go to state 124
 
-    LPAREN    [reduce using rule 70 (abstract_declarator_opt)]
     $default  reduce using rule 70 (abstract_declarator_opt)
 
     declarator                  go to state 125
@@ -1320,9 +1314,9 @@ state 65
 
 state 66
 
-   59 direct_declarator: direct_declarator RPAREN parameter_type_list . LPAREN
+   59 direct_declarator: direct_declarator LPAREN parameter_type_list . RPAREN
 
-    LPAREN  shift, and go to state 130
+    RPAREN  shift, and go to state 130
 
 
 state 67
@@ -1669,9 +1663,9 @@ state 83
 
 state 84
 
-   58 direct_declarator: direct_declarator RBRACKET constant_expression_opt . LBRACKET
+   58 direct_declarator: direct_declarator LBRACKET constant_expression_opt . RBRACKET
 
-    LBRACKET  shift, and go to state 147
+    RBRACKET  shift, and go to state 147
 
 
 state 85
@@ -1698,7 +1692,6 @@ state 86
     ARROW       shift, and go to state 152
     DOT         shift, and go to state 153
 
-    LBRACKET  [reduce using rule 128 (unary_expression)]
     $default  reduce using rule 128 (unary_expression)
 
 
@@ -2293,7 +2286,6 @@ state 126
     LPAREN      shift, and go to state 123
     LBRACKET    shift, and go to state 124
 
-    LPAREN    [reduce using rule 72 (abstract_declarator)]
     $default  reduce using rule 72 (abstract_declarator)
 
     direct_declarator           go to state 45
@@ -2323,13 +2315,12 @@ state 129
     LPAREN    shift, and go to state 210
     LBRACKET  shift, and go to state 211
 
-    LPAREN    [reduce using rule 73 (abstract_declarator)]
     $default  reduce using rule 73 (abstract_declarator)
 
 
 state 130
 
-   59 direct_declarator: direct_declarator RPAREN parameter_type_list LPAREN .
+   59 direct_declarator: direct_declarator LPAREN parameter_type_list RPAREN .
 
     $default  reduce using rule 59 (direct_declarator)
 
@@ -2560,7 +2551,7 @@ state 146
 
 state 147
 
-   58 direct_declarator: direct_declarator RBRACKET constant_expression_opt LBRACKET .
+   58 direct_declarator: direct_declarator LBRACKET constant_expression_opt RBRACKET .
 
     $default  reduce using rule 58 (direct_declarator)
 
@@ -3210,9 +3201,12 @@ state 174
    56 direct_declarator: IDENTIFIER .
   111 primary_expression: IDENTIFIER .
 
+    LPAREN    reduce using rule 56 (direct_declarator)
+    LPAREN    [reduce using rule 111 (primary_expression)]
     RPAREN    reduce using rule 56 (direct_declarator)
     RPAREN    [reduce using rule 111 (primary_expression)]
-    RBRACKET  reduce using rule 56 (direct_declarator)
+    LBRACKET  reduce using rule 56 (direct_declarator)
+    LBRACKET  [reduce using rule 111 (primary_expression)]
     COMMA     reduce using rule 56 (direct_declarator)
     COMMA     [reduce using rule 111 (primary_expression)]
     ASSIGN    reduce using rule 56 (direct_declarator)
@@ -3706,7 +3700,6 @@ state 209
     LPAREN    shift, and go to state 210
     LBRACKET  shift, and go to state 211
 
-    LPAREN    [reduce using rule 74 (abstract_declarator)]
     $default  reduce using rule 74 (abstract_declarator)
 
 
