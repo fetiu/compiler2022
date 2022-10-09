@@ -28,6 +28,7 @@ function_definition
     | declarator compound_statement
 declaration
     : declaration_specifiers init_declarator_list SEMICOLON
+    | declaration_specifiers SEMICOLON /* for unamed struct/enum */
 declaration_specifiers
     : type_specifier | storage_class_specifer | type_qualifier
     | type_specifier declaration_specifiers
@@ -47,7 +48,7 @@ type_specifier
     : struct_specifier | enum_specifier | TYPE_IDENTIFIER
 struct_specifier
     : struct_or_union IDENTIFIER LBRACE struct_declaration_list RBRACE
-    | struct_or_union LBRACKET struct_declaration_list RBRACKET
+    | struct_or_union LBRACE struct_declaration_list RBRACE
     | struct_or_union IDENTIFIER
 struct_or_union
     : STRUCT_SYM | UNION_SYM
