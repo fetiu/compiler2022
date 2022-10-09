@@ -95,10 +95,10 @@ parameter_list
     | parameter_list COMMA parameter_declaration
 parameter_declaration
     : declaration_specifiers declarator
-    | declaration_specifiers abstract_declarator_opt /* TODO: check replace type_name */
-abstract_declarator_opt
-    : /* empty */
-    | abstract_declarator
+    | type_name
+type_name
+    : declaration_specifiers
+    | declaration_specifiers abstract_declarator
 abstract_declarator
     : pointer
     | direct_abstract_declarator
@@ -190,9 +190,6 @@ unary_expression
 cast_expression
     : unary_expression
     | LPAREN type_name RPAREN cast_expression
-type_name
-    : declaration_specifiers
-    | declaration_specifiers abstract_declarator
 multiplicative_expression
     : cast_expression
     | multiplicative_expression STAR cast_expression
