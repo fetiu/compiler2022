@@ -28,7 +28,7 @@ function_definition
     | declarator compound_statement
 declaration
     : declaration_specifiers init_declarator_list SEMICOLON
-    | declaration_specifiers SEMICOLON /* for unamed struct/enum */
+    | declaration_specifiers SEMICOLON /* for unnamed struct/enum */
 declaration_specifiers
     : type_specifier | storage_class_specifer | type_qualifier
     | type_specifier declaration_specifiers
