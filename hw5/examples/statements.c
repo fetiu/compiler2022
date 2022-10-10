@@ -1,4 +1,5 @@
 main() {
+    // declaration
     int a = 1;
     float b = 1.2;
     char c = 'c';
@@ -7,6 +8,8 @@ main() {
     struct s {int (*f)();} g;
     struct s *h = g;
     int i = 0;
+
+    // initializer
     long j[] = {1,2,3,4,5,6,7};
     long k[100] = {0,};
 
@@ -17,22 +20,32 @@ main() {
     e = d;
 
     /* conditional expressions */
-    a = b || c;
-    a = b && c;
-    a = a | c;
-    a = a & c;
+    a = b || c; // logical OR expression
+    a = b && c; // logical AND expression
+    a = a | c;  // OR expression
+    a = a & c;  // AND expression
+
+    /* relational expression */
     a = b == c;
     a = b != c;
     a = b <= c;
     a = b >= c;
     a = b < c;
     a = b > c;
+
+    // additive expression
     a = b + c;
     a = b - c;
+
+    // multipicative expression
     a = b * c;
     a = b / c;
     a = a % c;
+
+    // cast expression
     a = (unsigned)(b / c + (char)(b - 3) * 5.2) % c;
+
+    // unary expression
     ++a;
     --a;
     &a;
@@ -44,12 +57,16 @@ main() {
     sizeof +a;
     sizeof "hello world";
     sizeof (signed long);
+
+    // postfix expression
     a++;
     a--;
     h->f();
     g.f = 0;
     h->f(a = b, b = c);
     d[a + b * c];
+
+    // primary expression
     (a + g.f() + c);
     "string literals";
     'c', 'b', 'd', 'h';
@@ -57,11 +74,14 @@ main() {
     1,2,3,4,5,6,7,8,9;
     any_identifier;
 
+    // jump statement
     break;
     continue;
     return;
     return 0;
     return h->f();
+
+    // iteration statement
     for (i = 0; i < a; i++) h->f();
     for (i = 0; i < a; i++) {
         h->f();
@@ -75,6 +95,8 @@ main() {
     while (a) {
         h->f();
     }
+
+    // selection statement
     switch (a)
     switch (a) {}
     if (a > c) g.f(); else h->f();
@@ -90,7 +112,11 @@ main() {
     else
         d[a] = c;
     if (a) d[a] = b;
+
+    // expression statement
     ;
+
+    // labled statement
     case 'c': h->f();
     case 'c': {
         g.f();

@@ -1,4 +1,4 @@
-int f(int, long, unsigned [], char *); // TODO: why space between unsigned []?
+int f(int, long, unsigned [], char *); // TODO: why need a space between unsigned and []?
 int g(int a, long b, unsigned c[], char *d, ...);
 int h(typedef const int a, const static long b); // TODO: should use specifier-qualifier
 auto int i(void)
